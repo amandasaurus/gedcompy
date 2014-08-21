@@ -185,7 +185,9 @@ class Element(object):
 
     def __repr__(self):
         """Interal string represation of this object, for debugging purposes."""
-        return "{}(level={}, tag={}, id={}, parent_id={}, value={!r}, children={!r})".format(self.__class__.__name__, self.level, self.tag, self.id, self.parent_id, self.value, self.child_elements)
+        return "{classname}({level}, {tag!r}{id}{value}{children})".format(
+            classname=self.__class__.__name__, level=self.level, tag=self.tag, id=(", "+repr(self.id) if self.id else ""),
+            value=(", "+repr(self.value) if self.value else ""), children=(", "+repr(self.child_elements) if len(self.child_elements) > 0 else ""))
 
     def __getitem__(self, key):
         """
