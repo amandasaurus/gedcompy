@@ -341,7 +341,7 @@ class Individual(Element):
         :returns: (firstname, lastname)
         """
         name_tag = self['NAME']
-        if name_tag.value == "":
+        if name_tag.value in ('', None):
             first = name_tag['GIVN'].value
             last = name_tag['SURN'].value
         else:

@@ -116,6 +116,14 @@ class GedComTestCase(unittest.TestCase):
         parsed = gedcom.parse(filename)
         self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
 
+    def testSupportNameInGivenAndSurname(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n\n0 TRLR")
+        self.assertEqual(gedcomfile['@I1@'].name, ('Bob', 'Cox'))
+
+    def testSupportNameInOneWithSlashes(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Cox/\n\n0 TRLR")
+        self.assertEqual(gedcomfile['@I1@'].name, ('Bob', 'Cox'))
+
         
 
 if __name__ == '__main__':
