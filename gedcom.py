@@ -145,6 +145,23 @@ class GedcomFile(object):
             # add trailer
             self.root_elements.append(Element(tag='TRLR', level=0, value=''))
 
+    def element(self, tag, **kwargs):
+        """
+        Return a new Element that is in this file.
+        :param str tag: tag name for this object
+        :param **kwargs: Passed to Element constructor
+        :rtype: Element or subclass based on `tag`
+        """
+        klass = class_for_tag(tag)
+        return klass(gedcom_file=self, tag=tag, **kwargs)
+
+    def individual(self, **kwargs):
+        return self.element("INDI", **kwargs)
+
+    def family(self, **kwargs):
+        return self.element("FAM", **kwargs)
+
+
 
 class Element(object):
 
