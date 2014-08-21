@@ -53,3 +53,7 @@ coverage.xml
 docs/_build/
 
 .*.swp
+
+# Ignore GEDCOM files that might be here
+*.ged
+*.GED
