@@ -86,7 +86,7 @@ class GedComTestCase(unittest.TestCase):
 
     def testCanCreate(self):
         gedcomfile = gedcom.GedcomFile()
-        individual = gedcom.Individual()
+        individual = gedcomfile.individual()
         individual.set_sex("M")
         self.assertEquals(individual.level, None)
         gedcomfile.add_element(individual)

@@ -135,17 +135,17 @@ class GedcomFile(object):
         """
         if len(self.root_elements) == 0 or self.root_elements[0].tag != 'HEAD':
             # add header
-            head_element = Element(tag='HEAD', level=0, value='')
-            source = Element(tag="SOUR")
-            source.add_child_element(Element(tag="NAME", value="gedcompy"))
-            source.add_child_element(Element(tag="VERS", value=__version__))
+            head_element = self.element('HEAD', level=0, value='')
+            source = self.element("SOUR")
+            source.add_child_element(self.element("NAME", value="gedcompy"))
+            source.add_child_element(self.element("VERS", value=__version__))
             head_element.add_child_element(source)
-            head_element.add_child_element(Element(tag="CHAR", value="UNICODE"))
+            head_element.add_child_element(self.element("CHAR", value="UNICODE"))
             head_element.set_levels_downward()
             self.root_elements.insert(0, head_element)
         if len(self.root_elements) == 0 or self.root_elements[-1].tag != 'TRLR':
             # add trailer
-            self.root_elements.append(Element(tag='TRLR', level=0, value=''))
+            self.root_elements.append(self.element('TRLR', level=0, value=''))
 
     def element(self, tag, **kwargs):
         """
@@ -445,7 +445,7 @@ class Individual(Element):
             sex_node = self['SEX']
             sex_node.value = sex
         except IndexError:
-            self.add_child_element(Element(tag="SEX", value=sex))
+            self.add_child_element(self.gedcom_file.element("SEX", value=sex))
 
 
 
