@@ -327,7 +327,7 @@ class Individual(Element):
             if not any(child.value == self.id for child in family.get_list("CHIL")):
                 # raise Exception("Invalid family", family, self)
                 pass
-            parents = family.get_list('HUSB') + family.get_list("WIFE")
+            parents = family.partners
             parents = [p.as_individual() for p in parents]
             return parents
         else:
@@ -454,7 +454,14 @@ class Family(Element):
 
     """Represents a family 'FAM' tag."""
 
-    pass
+    @property
+    def partners(self):
+        """
+        Return list of partners in this marriage. all HUSB/WIFE child elements. Not dereferenced
+        :rtype: list of Husband or Wives
+        """
+        return self.get_list("HUSB") + self.get_list("WIFE")
+    
 
 
 class Spouse(Element):
