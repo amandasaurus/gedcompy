@@ -295,7 +295,7 @@ class Element(object):
 tags_to_classes = {}
 
 
-def class_for_tag(tag):
+def register_tag(tag):
     """ Internal class decorator to mark a python class as to be the handler for this tag.  """
     def classdecorator(klass):
         global tags_to_classes
@@ -305,7 +305,7 @@ def class_for_tag(tag):
     return classdecorator
 
 
-@class_for_tag("INDI")
+@register_tag("INDI")
 class Individual(Element):
 
     """Represents and INDI (Individual) element."""
@@ -447,7 +447,7 @@ class Individual(Element):
 
 
 
-@class_for_tag("FAM")
+@register_tag("FAM")
 class Family(Element):
 
     """Represents a family 'FAM' tag."""
@@ -470,7 +470,7 @@ class Spouse(Element):
         return self.gedcom_file[self.value]
 
 
-@class_for_tag("HUSB")
+@register_tag("HUSB")
 class Husband(Spouse):
 
     """Represents pointer to a husband in a family."""
@@ -478,7 +478,7 @@ class Husband(Spouse):
     pass
 
 
-@class_for_tag("WIFE")
+@register_tag("WIFE")
 class Wife(Spouse):
 
     """Represents pointer to a husband in a family."""
@@ -513,7 +513,7 @@ class Event(Element):
         return self['PLAC'].value
 
 
-@class_for_tag("BIRT")
+@register_tag("BIRT")
 class Birth(Event):
 
     """Represents a birth (BIRT)."""
@@ -521,7 +521,7 @@ class Birth(Event):
     pass
 
 
-@class_for_tag("DEAT")
+@register_tag("DEAT")
 class Death(Event):
 
     """Represents a death (DEAT)."""
@@ -529,12 +529,22 @@ class Death(Event):
     pass
 
 
-@class_for_tag("MARR")
+@register_tag("MARR")
 class Marriage(Event):
 
     """Represents a marriage (MARR)."""
 
     pass
+
+
+def class_for_tag(tag):
+    """
+    Return the class object for this `tag`
+    :param str tag: tag (e.g. INDI)
+    :rtype: class (Element or something that's a subclass)
+    """
+    global tags_to_classes
+    return tags_to_classes.get(tag, Element)
 
 
 def line_to_element(**line_dict):
@@ -543,10 +553,7 @@ def line_to_element(**line_dict):
 
     :rtype: Element or subclass
     """
-    if line_dict['tag'] in tags_to_classes:
-        return tags_to_classes[line_dict['tag']](**line_dict)
-    else:
-        return Element(**line_dict)
+    return class_for_tag(line_dict['tag'])(**line_dict)
 
 
 def parse_filename(filename):
