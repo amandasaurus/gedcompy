@@ -47,7 +47,7 @@ class GedcomFile(object):
         """
         if element.level is None:
             # Need to figure out an element
-            if not isinstance(element, Individual):
+            if not ( isinstance(element, Individual) or isinstance(element, Family)):
                 raise TypeError()
             element.level = 0
             element.set_levels_downward()
