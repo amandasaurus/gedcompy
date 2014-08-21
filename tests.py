@@ -1,5 +1,7 @@
 import unittest
 import gedcom
+import six
+import tempfile
 
 # Sample GEDCOM file from Wikipedia
 GEDCOM_FILE = """
@@ -98,6 +100,21 @@ class GedComTestCase(unittest.TestCase):
 
         self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n0 @I1@ INDI\n1 SEX M\n0 TRLR')
 
+
+    def testCanAutoDetectInputFP(self):
+        fp = six.StringIO(GEDCOM_FILE)
+        parsed = gedcom.parse(fp)
+        self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
+
+    def testCanAutoDetectInputString(self):
+        parsed = gedcom.parse(GEDCOM_FILE)
+        self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
+
+    def testCanAutoDetectInputFilename(self):
+        myfile = tempfile.NamedTemporaryFile()
+        filename = myfile.name
+        parsed = gedcom.parse(filename)
+        self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
 
         
 

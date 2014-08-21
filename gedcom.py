@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/GEDCOM
 """
 import re
 import numbers
+import os.path
+import six
 
 __version__ = "0.1.0"
 
@@ -577,14 +579,27 @@ def parse_string(string):
     return __parse(string.split("\n"))
 
 
-def parse(file_fp):
+def parse_fp(file_fp):
     """
     Parse file and return GedcomFile.
 
     :param filehandle file_fp: open file handle for input
     :returns: GedcomFile instance
     """
-    return __parse(fp.readlines())
+    return __parse(file_fp.readlines())
+
+def parse(obj):
+    """
+    Parse and return this object, if it's a file
+    """
+    if isinstance(obj, six.string_types):
+        # Sanity check, presumes anything > 1KB could not be a filename
+        if len(obj) <= 1024 and os.path.exists(obj):
+            return parse_filename(obj)
+        else:
+            return parse_string(obj)
+    else:
+        return parse_fp(obj)
 
 
 def __parse(lines_iter):
