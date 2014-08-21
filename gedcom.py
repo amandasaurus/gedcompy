@@ -76,6 +76,7 @@ class GedcomFile(object):
                 raise Exception("Ran out of ids?")
 
 
+        element.gedcom_file = self
         if element.id:
             self.pointers[element.id] = element
         if element.level == 0:
@@ -153,7 +154,7 @@ class Element(object):
     Can be used as is, or subclassed for specific functionality.
     """
 
-    def __init__(self, level=None, tag=None, value=None, id=None, parent_id=None, parent=None):
+    def __init__(self, level=None, tag=None, value=None, id=None, parent_id=None, parent=None, gedcom_file=None):
         """
         Create an element.
 
@@ -162,6 +163,7 @@ class Element(object):
         :param str value: *optional* value for this tag
         :param string parent_id: ID/Pointer for the parent element for this element.
         :param Element parent: The actual parent element of this object.
+        :param GedcomFile gedcom_file: File this element is in (used for lookups)
         """
         self.level = level
         if tag is not None:
@@ -176,6 +178,7 @@ class Element(object):
         self.parent_element = parent
         self.id = id
         self.parent_id = parent_id
+        self.gedcom_file = gedcom_file
 
         if parent is not None:
             self.parent_element.add_child_element(self)
@@ -222,6 +225,7 @@ class Element(object):
         """
         child_element.parent = self
         child_element.parent_id = self.id
+        child_element.gedcom_file = self.gedcom_file
         self.child_elements.append(child_element)
 
     def get_by_id(self, other_id):
@@ -251,6 +255,7 @@ class Element(object):
             raise TypeError(self.level)
         for c in self.child_elements:
             c.level = self.level + 1
+            c.gedcom_file = self.gedcom_file
             c.set_levels_downward()
 
     def gedcom_lines(self):
