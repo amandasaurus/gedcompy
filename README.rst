@@ -14,6 +14,16 @@ It's goal is to support GEDCOM v5.5 (`specification here <http://homepages.roots
 
 This is released under the GNU General Public Licence version 3 (or at your option, a later version). See the file `LICENCE` for more.
 
+Example Usage
+-------------
+
+    >>> import gedcom
+    >>> gedcomfile = gedcom.parse("myfamilytree.ged")
+    >>> for person in gedcomfile.individuals:
+    ...    firstname, lastname = individual.name
+    ...    print "{0} {1} is in the file".format(firstname, lastname)
+
+
 Contributing
 ------------
 
