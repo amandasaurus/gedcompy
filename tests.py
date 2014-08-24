@@ -46,7 +46,6 @@ GEDCOM_FILE = """
 class GedComTestCase(unittest.TestCase):
 
     def testCanParse(self):
-        #import pudb; pudb.set_trace()
         parsed = gedcom.parse_string(GEDCOM_FILE)
         self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
         
