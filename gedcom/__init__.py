@@ -126,6 +126,25 @@ class GedcomFile(object):
         """
         return "\n".join(self.gedcom_lines())
 
+    def save(self, fileout):
+        """
+        Saves the contents of this GEDCOM file to specified filename or file-like object.
+
+        :param fileout: Filename or open file-like object to save this to.
+        :raises Exception: if the filename exists
+        """
+        if isinstance(obj, six.string_types):
+            if os.path.exists(obj):
+                # TODO better exception
+                raise Exception("File exists")
+            else:
+                with open(fileout, "w") as fp:
+                    return self.save(fp)
+        
+        for line in self.gedcom_lines():
+            fp.write(line)
+            fp.write("\n")
+
 
     def ensure_header_trailer(self):
         """
@@ -591,13 +610,18 @@ def parse_fp(file_fp):
     Parse file and return GedcomFile.
 
     :param filehandle file_fp: open file handle for input
-    :returns: GedcomFile instance
+    :returns: GedcomFile
     """
     return __parse(file_fp.readlines())
 
 def parse(obj):
     """
-    Parse and return this object, if it's a file
+    Parse and return this object, if it's a file.
+
+    If it's a filename, it calls :py:func:`parse_filename`, for file-like objects, :py:mod:`parse_fp`, for strings, calls :py:mod:`parse_string`.
+
+    :param obj: filename, open file-like object or string contents of GEDCOM file
+    :returns: GedcomFile
     """
     if isinstance(obj, six.string_types):
         # Sanity check, presumes anything > 1KB could not be a filename
