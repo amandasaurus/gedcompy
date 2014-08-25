@@ -133,8 +133,8 @@ class GedcomFile(object):
         :param fileout: Filename or open file-like object to save this to.
         :raises Exception: if the filename exists
         """
-        if isinstance(obj, six.string_types):
-            if os.path.exists(obj):
+        if isinstance(fileout, six.string_types):
+            if os.path.exists(fileout):
                 # TODO better exception
                 raise Exception("File exists")
             else:
@@ -142,8 +142,8 @@ class GedcomFile(object):
                     return self.save(fp)
         
         for line in self.gedcom_lines():
-            fp.write(line)
-            fp.write("\n")
+            fileout.write(line)
+            fileout.write("\n")
 
 
     def ensure_header_trailer(self):
