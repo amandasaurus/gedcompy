@@ -310,7 +310,13 @@ class Element(object):
         for child in self.child_elements:
             for line in child.gedcom_lines():
                 yield line
-            
+
+    @property
+    def note(self):
+        if 'NOTE' not in self:
+            return None
+        else:
+            return self['NOTE'].full_text
 
 
 tags_to_classes = {}
@@ -563,6 +569,33 @@ class Marriage(Event):
     """Represents a marriage (MARR)."""
 
     pass
+
+
+@register_tag("NOTE")
+class Note(Element):
+
+    """Represents a note (NOTE)."""
+
+    @property
+    def full_text(self):
+        result = ""
+        first_line = self.value or ''
+        conts = self.get_list("CONT")
+        concs = self.get_list("CONC")
+
+        if len(conts) > 0 and len(concs) > 0:
+            raise ValueError("Cannot have CONTs *and* CONC in the same NOTE")
+        elif len(conts) > 0 and len(concs) == 0:
+            lines = "\n".join(x.value or '' for x in conts)
+            result = first_line + "\n" + lines
+        elif len(conts) == 0 and len(concs) > 0:
+            lines = "".join(x.value or '' for x in concs)
+            result = first_line + lines
+        elif len(conts) == 0 and len(concs) == 0:
+            # nothing to do
+            pass
+
+        return result
 
 
 def class_for_tag(tag):
