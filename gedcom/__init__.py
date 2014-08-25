@@ -142,7 +142,7 @@ class GedcomFile(object):
                     return self.save(fp)
         
         for line in self.gedcom_lines():
-            fileout.write(line)
+            fileout.write(line.encode("utf8"))
             fileout.write("\n")
 
 
