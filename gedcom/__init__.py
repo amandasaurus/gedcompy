@@ -305,7 +305,7 @@ class Element(object):
         :rtype: iterator over string
         """
         line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[A-Z]+)( (?P<value>.*))?$")
-        line = "{level}{id} {tag}{value}".format(level=self.level, id=(" "+self.id if self.id else ""), tag=self.tag, value=(" "+self.value if self.value else ""))
+        line = u"{level}{id} {tag}{value}".format(level=self.level, id=(" "+self.id if self.id else ""), tag=self.tag, value=(" "+self.value if self.value else ""))
         yield line
         for child in self.child_elements:
             for line in child.gedcom_lines():
