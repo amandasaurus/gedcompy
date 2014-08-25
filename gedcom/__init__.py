@@ -472,6 +472,13 @@ class Individual(Element):
         except IndexError:
             self.add_child_element(self.gedcom_file.element("SEX", value=sex))
 
+    @property
+    def title(self):
+        try:
+            return self['TITL'].value
+        except:
+            return None
+
 
 
 @register_tag("FAM")
