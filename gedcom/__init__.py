@@ -113,6 +113,7 @@ class GedcomFile(object):
         :rtype: iterator
         """
         self.ensure_header_trailer()
+        self.ensure_levels()
         for el in self.root_elements:
             for line in el.gedcom_lines():
                 yield line
@@ -165,6 +166,18 @@ class GedcomFile(object):
         if len(self.root_elements) == 0 or self.root_elements[-1].tag != 'TRLR':
             # add trailer
             self.root_elements.append(self.element('TRLR', level=0, value=''))
+
+    def ensure_levels(self):
+        """
+        Ensures that the levels for all elements in this file are sensible.
+
+        Sets the :py:attr:`Element.level` of all root elements to 0, and calls
+        :py:meth:`Element.set_levels_downward` on each one.
+        """
+        for root_el in self.root_elements:
+            root_el.level = 0
+            root_el.set_levels_downward()
+
 
     def element(self, tag, **kwargs):
         """
