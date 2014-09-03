@@ -161,6 +161,13 @@ class GedcomFile(object):
             source.add_child_element(self.element("VERS", value=__version__))
             head_element.add_child_element(source)
             head_element.add_child_element(self.element("CHAR", value="UNICODE"))
+
+            gedcom_format = self.element("GEDC")
+            gedcom_format.add_child_element(self.element("VERS", value="5.5"))
+            gedcom_format.add_child_element(self.element("FORM", value="LINEAGE-LINKED"))
+            head_element.add_child_element(gedcom_format)
+
+
             head_element.set_levels_downward()
             self.root_elements.insert(0, head_element)
         if len(self.root_elements) == 0 or self.root_elements[-1].tag != 'TRLR':
