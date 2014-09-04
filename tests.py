@@ -80,7 +80,7 @@ class GedComTestCase(unittest.TestCase):
 
     def testCreateEmpty(self):
         gedcomfile = gedcom.GedcomFile()
-        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n0 TRLR')
+        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 TRLR')
 
 
     def testCanCreate(self):
@@ -97,7 +97,7 @@ class GedComTestCase(unittest.TestCase):
         self.assertEquals(individual.tag, 'INDI')
         self.assertEquals(individual.level, 0)
 
-        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n0 @I1@ INDI\n1 SEX M\n0 TRLR')
+        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 @I1@ INDI\n1 SEX M\n0 TRLR')
 
 
     def testCanAutoDetectInputFP(self):
