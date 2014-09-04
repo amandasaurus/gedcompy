@@ -10,5 +10,6 @@ install:
 # command to run tests
 script:
     - coverage run --source=gedcom setup.py test
+    - pep8 --max-line-length=200 gedcom
 after_success:
     - coveralls
