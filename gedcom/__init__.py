@@ -38,7 +38,6 @@ class GedcomFile(object):
         """
         return self.pointers[key]
 
-
     def add_element(self, element):
         """
         Add an Element to this file.
@@ -49,7 +48,7 @@ class GedcomFile(object):
         """
         if element.level is None:
             # Need to figure out an element
-            if not ( isinstance(element, Individual) or isinstance(element, Family)):
+            if not (isinstance(element, Individual) or isinstance(element, Family)):
                 raise TypeError()
             element.level = 0
             element.set_levels_downward()
@@ -77,13 +76,11 @@ class GedcomFile(object):
                 # prevents an infinite loop
                 raise Exception("Ran out of ids?")
 
-
         element.gedcom_file = self
         if element.id:
             self.pointers[element.id] = element
         if element.level == 0:
             self.root_elements.append(element)
-
 
     @property
     def individuals(self):
@@ -141,11 +138,10 @@ class GedcomFile(object):
             else:
                 with open(fileout, "w") as fp:
                     return self.save(fp)
-        
+
         for line in self.gedcom_lines():
             fileout.write(line.encode("utf8"))
             fileout.write("\n")
-
 
     def ensure_header_trailer(self):
         """
@@ -167,7 +163,6 @@ class GedcomFile(object):
             gedcom_format.add_child_element(self.element("FORM", value="LINEAGE-LINKED"))
             head_element.add_child_element(gedcom_format)
 
-
             head_element.set_levels_downward()
             self.root_elements.insert(0, head_element)
         if len(self.root_elements) == 0 or self.root_elements[-1].tag != 'TRLR':
@@ -184,7 +179,6 @@ class GedcomFile(object):
         for root_el in self.root_elements:
             root_el.level = 0
             root_el.set_levels_downward()
-
 
     def element(self, tag, **kwargs):
         """
@@ -203,12 +197,11 @@ class GedcomFile(object):
         return self.element("FAM", **kwargs)
 
 
-
 class Element(object):
 
     """
     Generic represetation for a GEDCOM element.
-    
+
     Can be used as is, or subclassed for specific functionality.
     """
 
@@ -244,8 +237,8 @@ class Element(object):
     def __repr__(self):
         """Interal string represation of this object, for debugging purposes."""
         return "{classname}({level}, {tag!r}{id}{value}{children})".format(
-            classname=self.__class__.__name__, level=self.level, tag=self.tag, id=(", "+repr(self.id) if self.id else ""),
-            value=(", "+repr(self.value) if self.value else ""), children=(", "+repr(self.child_elements) if len(self.child_elements) > 0 else ""))
+            classname=self.__class__.__name__, level=self.level, tag=self.tag, id=(", " + repr(self.id) if self.id else ""),
+            value=(", " + repr(self.value) if self.value else ""), children=(", " + repr(self.child_elements) if len(self.child_elements) > 0 else ""))
 
     def __getitem__(self, key):
         """
@@ -325,7 +318,7 @@ class Element(object):
         :rtype: iterator over string
         """
         line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[A-Z]+)( (?P<value>.*))?$")
-        line = u"{level}{id} {tag}{value}".format(level=self.level, id=(" "+self.id if self.id else ""), tag=self.tag, value=(" "+self.value if self.value else ""))
+        line = u"{level}{id} {tag}{value}".format(level=self.level, id=(" " + self.id if self.id else ""), tag=self.tag, value=(" " + self.value if self.value else ""))
         yield line
         for child in self.child_elements:
             for line in child.gedcom_lines():
@@ -363,7 +356,7 @@ class Individual(Element):
         Return list of parents of this person.
 
         NB: There may be 0, 1, 2, 3, ... elements in this list.
-    
+
         :returns: List of Individual's
         """
         if 'FAMC' in self:
@@ -432,7 +425,7 @@ class Individual(Element):
     def father(self):
         """
         Calculate and return the individual represenating the father of this person.
-        
+
         Returns `None` if none found.
 
         :return: the father, or `None` if not in file.
@@ -451,7 +444,7 @@ class Individual(Element):
     def mother(self):
         """
         Calculate and return the individual represenating the mother of this person.
-        
+
         Returns `None` if none found.
 
         :return: the mother, or `None` if not in file.
@@ -500,7 +493,6 @@ class Individual(Element):
             return None
 
 
-
 @register_tag("FAM")
 class Family(Element):
 
@@ -513,11 +505,10 @@ class Family(Element):
         :rtype: list of Husband or Wives
         """
         return self.get_list("HUSB") + self.get_list("WIFE")
-    
 
 
 class Spouse(Element):
-    
+
     """Generic base class for HUSB/WIFE."""
 
     def as_individual(self):
@@ -673,6 +664,7 @@ def parse_fp(file_fp):
     :returns: GedcomFile
     """
     return __parse(file_fp.readlines())
+
 
 def parse(obj):
     """
