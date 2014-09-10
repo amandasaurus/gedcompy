@@ -596,22 +596,16 @@ class Note(Element):
 
     @property
     def full_text(self):
-        result = ""
-        first_line = self.value or ''
-        conts = self.get_list("CONT")
-        concs = self.get_list("CONC")
+        result = "" + self.value or ''
 
-        if len(conts) > 0 and len(concs) > 0:
-            raise ValueError("Cannot have CONTs *and* CONC in the same NOTE")
-        elif len(conts) > 0 and len(concs) == 0:
-            lines = "\n".join(x.value or '' for x in conts)
-            result = first_line + "\n" + lines
-        elif len(conts) == 0 and len(concs) > 0:
-            lines = "".join(x.value or '' for x in concs)
-            result = first_line + lines
-        elif len(conts) == 0 and len(concs) == 0:
-            # nothing to do
-            pass
+        for cons in self.child_elements:
+            if cons.tag == 'CONT':
+                result += "\n"
+                result += cons.value or ''
+            elif cons.tag == 'CONC':
+                result += cons.value or ''
+            else:
+                raise ValueError("Full text can only consist of CONS and CONT")
 
         return result
 
