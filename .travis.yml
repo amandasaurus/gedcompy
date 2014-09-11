@@ -5,9 +5,7 @@ python:
     - "3.3"
     - "3.4"
 install:
-    - pip install six --use-mirrors
-    - pip install coveralls --use-mirrors
-# command to run tests
+    - pip install six pep8 coveralls --use-mirrors
 script:
     - coverage run --source=gedcom setup.py test
     - pep8 --max-line-length=200 gedcom
