@@ -5,7 +5,7 @@ from setuptools import setup
 setup(
     name='gedcompy',
     version='0.1',
-    py_modules=['gedcom',],
+    packages=['gedcom',],
     license='GPLv3+',
     test_suite='tests',
     description="Parse and create GEDCOM (geneology) files",
