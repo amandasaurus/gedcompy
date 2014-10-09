@@ -10,7 +10,7 @@ import six
 
 __version__ = "0.1.0"
 
-line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[A-Z]+)( (?P<value>.*))?$")
+line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[_A-Z]+)( (?P<value>.*))?$")
 
 
 class GedcomFile(object):
