@@ -16,7 +16,9 @@ GEDCOM_FILE = """
 2 VERS 5.5
 1 CHAR MACINTOSH
 0 @I1@ INDI
+1 NAME Robert /Cox/
 1 NAME Bob /Cox/
+2 TYPE aka
 1 SEX M
 1 FAMS @F1@
 1 CHAN
@@ -48,12 +50,13 @@ class GedComTestCase(unittest.TestCase):
     def testCanParse(self):
         parsed = gedcom.parse_string(GEDCOM_FILE)
         self.assertTrue(isinstance(parsed, gedcom.GedcomFile))
-        
+
         people = list(parsed.individuals)
         self.assertTrue(len(people), 3)
 
         bob = people[0]
-        self.assertEquals(bob.name, ("Bob", "Cox"))
+        self.assertEquals(bob.name, ("Robert", "Cox"))
+        self.assertEquals(bob.aka, [("Bob", "Cox")])
         self.assertEquals(bob.sex, 'M')
         self.assertEquals(bob.gender, 'M')
         self.assertTrue(bob.is_male)
@@ -123,7 +126,7 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Cox/\n\n0 TRLR")
         self.assertEqual(gedcomfile['@I1@'].name, ('Bob', 'Cox'))
 
-        
+
 
 if __name__ == '__main__':
     unittest.main()

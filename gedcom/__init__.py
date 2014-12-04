@@ -245,7 +245,6 @@ class Element(object):
         Get the child element that has ``key`` as a tag.
 
         :param string key: tag name of child element you want
-        :raises KeyError: If there are >1 child elements with this tag
         :raises IndexError: If there are no child elements with this tag
         :returns: Element
         :rtype: Element (or subclass)
@@ -256,7 +255,7 @@ class Element(object):
         elif len(children) == 1:
             return children[0]
         elif len(children) > 1:
-            raise KeyError(key)
+            return children
 
     def __contains__(self, key):
         """
@@ -379,15 +378,54 @@ class Individual(Element):
         :returns: (firstname, lastname)
         """
         name_tag = self['NAME']
-        if name_tag.value in ('', None):
-            first = name_tag['GIVN'].value
-            last = name_tag['SURN'].value
+
+        if isinstance(name_tag, list):
+            # We have more than one name, get the preferred name
+            # Don't assume it's the first
+            for name in name_tag:
+
+                if 'TYPE' not in name:
+                    preferred_name = name
+                    break
+
         else:
-            first, last, dud = name_tag.value.split("/")
+            # We've only one name
+            preferred_name = name_tag
+
+        if preferred_name.value in ('', None):
+            first = preferred_name['GIVN'].value
+            last = preferred_name['SURN'].value
+        else:
+            first, last, dud = preferred_name.value.split("/")
             first = first.strip()
             last = last.strip()
 
         return first, last
+
+    @property
+    def aka(self):
+        '''
+        Return a list of 'also known as' names.
+        '''
+
+        aka_list = []
+        name_tag = self['NAME']
+
+        if isinstance(name_tag, list):
+            # We have more than one name, get the aka names
+            for name in name_tag:
+
+                if 'TYPE' in name and name['TYPE'].value.lower() == 'aka':
+                    if name.value in ('', None):
+                        first = name['GIVN'].value
+                        last = name['SURN'].value
+                    else:
+                        first, last, dud = name.value.split("/")
+                        first = first.strip()
+                        last = last.strip()
+                    aka_list.append((first, last))
+
+        return aka_list
 
     @property
     def birth(self):
