@@ -2,6 +2,7 @@ import unittest
 import gedcom
 import six
 import tempfile
+from os import remove
 
 # Sample GEDCOM file from Wikipedia
 GEDCOM_FILE = """
@@ -129,14 +130,18 @@ class GedComTestCase(unittest.TestCase):
     def testSaveFile(self):
         gedcomfile = gedcom.parse_string(GEDCOM_FILE)
         outputfile = tempfile.NamedTemporaryFile()
+        outputfilename = outputfile.name
         gedcomfile.save(outputfile)
         outputfile.seek(0,0)
         
         self.assertEqual(outputfile.read(), GEDCOM_FILE)
-        self.assertRaises(Exception, gedcomfile.save, (outputfile.name))
-        
+        self.assertRaises(Exception, gedcomfile.save, (outputfilename))
         outputfile.close()
         
+        gedcomfile.save(outputfilename)
+        with open(outputfilename) as output:
+            self.assertEqual(output.read(), GEDCOM_FILE)
+        remove(outputfilename)
 
 if __name__ == '__main__':
     unittest.main()
