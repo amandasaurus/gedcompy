@@ -126,7 +126,17 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Cox/\n\n0 TRLR")
         self.assertEqual(gedcomfile['@I1@'].name, ('Bob', 'Cox'))
 
-
+    def testSaveFile(self):
+        gedcomfile = gedcom.parse_string(GEDCOM_FILE)
+        outputfile = tempfile.NamedTemporaryFile()
+        gedcomfile.save(outputfile)
+        outputfile.seek(0,0)
+        
+        self.assertEqual(outputfile.read(), GEDCOM_FILE)
+        self.assertRaises(Exception, gedcomfile.save, (outputfile.name))
+        
+        outputfile.close()
+        
 
 if __name__ == '__main__':
     unittest.main()
