@@ -384,16 +384,7 @@ class Individual(Element):
             # Don't assume it's the first
             for name in name_tag:
 
-                # I'd like an implementation of get() here,
-                # rather than relying on an exception.
-                try:
-                    name_type = name['TYPE']
-                except IndexError:
-                    name_type = None
-
-                if name_type is not None:
-                    pass
-                else:
+                if 'TYPE' not in name:
                     preferred_name = name
                     break
 
@@ -424,14 +415,7 @@ class Individual(Element):
             # We have more than one name, get the aka names
             for name in name_tag:
 
-                # I'd like an implementation of get() here,
-                # rather than relying on an exception.
-                try:
-                    name_type = name['TYPE']
-                except IndexError:
-                    name_type = None
-
-                if name_type is not None and name_type.value.lower() == 'aka':
+                if 'TYPE' in name and name['TYPE'].value.lower() == 'aka':
                     if name.value in ('', None):
                         first = name['GIVN'].value
                         last = name['SURN'].value
