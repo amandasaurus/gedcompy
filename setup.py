@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='gedcompy',
-    version='0.1',
+    version='0.2',
     packages=['gedcom',],
     license='GPLv3+',
     test_suite='tests',
