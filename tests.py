@@ -47,6 +47,8 @@ GEDCOM_FILE = """0 HEAD
 0 TRLR
 """
 
+def v(string):
+    return string.format(version=gedcom.__version__)
 
 
 class GedComTestCase(unittest.TestCase):
@@ -95,7 +97,7 @@ class GedComTestCase(unittest.TestCase):
 
     def testCreateEmpty(self):
         gedcomfile = gedcom.GedcomFile()
-        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.2.0\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 TRLR')
+        self.assertEqual(gedcomfile.gedcom_lines_as_string(), v('0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS {version}\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 TRLR'))
 
 
     def testCanCreate(self):
@@ -115,8 +117,8 @@ class GedComTestCase(unittest.TestCase):
         self.assertEquals(family.tag, 'FAM')
         self.assertEquals(family.level, 0)
 
-        self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.2.0\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 @I1@ INDI\n1 SEX M\n0 @F2@ FAM\n0 TRLR')
-        self.assertEqual(repr(gedcomfile), "GedcomFile(\nElement(0, 'HEAD', [Element(1, 'SOUR', [Element(2, 'NAME', 'gedcompy'), Element(2, 'VERS', '0.2.0')]), Element(1, 'CHAR', 'UNICODE'), Element(1, 'GEDC', [Element(2, 'VERS', '5.5'), Element(2, 'FORM', 'LINEAGE-LINKED')])]),\nIndividual(0, 'INDI', '@I1@', [Element(1, 'SEX', 'M')]),\nFamily(0, 'FAM', '@F2@'),\nElement(0, 'TRLR'))")
+        self.assertEqual(gedcomfile.gedcom_lines_as_string(), v('0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS {version}\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 @I1@ INDI\n1 SEX M\n0 @F2@ FAM\n0 TRLR'))
+        self.assertEqual(repr(gedcomfile), v("GedcomFile(\nElement(0, 'HEAD', [Element(1, 'SOUR', [Element(2, 'NAME', 'gedcompy'), Element(2, 'VERS', '{version}')]), Element(1, 'CHAR', 'UNICODE'), Element(1, 'GEDC', [Element(2, 'VERS', '5.5'), Element(2, 'FORM', 'LINEAGE-LINKED')])]),\nIndividual(0, 'INDI', '@I1@', [Element(1, 'SEX', 'M')]),\nFamily(0, 'FAM', '@F2@'),\nElement(0, 'TRLR'))"))
 
     def testCanOnlyAddIndividualOrFamilyToFile(self):
         gedcomfile = gedcom.GedcomFile()
