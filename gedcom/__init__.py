@@ -126,7 +126,7 @@ class GedcomFile(object):
 
     def save(self, fileout):
         """
-        Saves the contents of this GEDCOM file to specified filename or file-like object.
+        Save the contents of this GEDCOM file to specified filename or file-like object.
 
         :param fileout: Filename or open file-like object to save this to.
         :raises Exception: if the filename exists
@@ -171,7 +171,7 @@ class GedcomFile(object):
 
     def ensure_levels(self):
         """
-        Ensures that the levels for all elements in this file are sensible.
+        Ensure that the levels for all elements in this file are sensible.
 
         Sets the :py:attr:`Element.level` of all root elements to 0, and calls
         :py:meth:`Element.set_levels_downward` on each one.
@@ -183,6 +183,7 @@ class GedcomFile(object):
     def element(self, tag, **kwargs):
         """
         Return a new Element that is in this file.
+
         :param str tag: tag name for this object
         :param **kwargs: Passed to Element constructor
         :rtype: Element or subclass based on `tag`
@@ -191,9 +192,11 @@ class GedcomFile(object):
         return klass(gedcom_file=self, tag=tag, **kwargs)
 
     def individual(self, **kwargs):
+        """Create and return an Individual in this file."""
         return self.element("INDI", **kwargs)
 
     def family(self, **kwargs):
+        """Create and return a Family that is in this file."""
         return self.element("FAM", **kwargs)
 
 
@@ -325,6 +328,11 @@ class Element(object):
 
     @property
     def note(self):
+        """
+        Return the text of the Note (if any) of this Element.
+
+        Return None if there is no Note.
+        """
         if 'NOTE' not in self:
             return None
         else:
@@ -404,10 +412,7 @@ class Individual(Element):
 
     @property
     def aka(self):
-        '''
-        Return a list of 'also known as' names.
-        '''
-
+        """Return a list of 'also known as' names."""
         aka_list = []
         name_tag = self['NAME']
 
@@ -525,6 +530,7 @@ class Individual(Element):
 
     @property
     def title(self):
+        """Return the value of the Title (TITL) of this person, or None if no title."""
         try:
             return self['TITL'].value
         except:
@@ -539,7 +545,8 @@ class Family(Element):
     @property
     def partners(self):
         """
-        Return list of partners in this marriage. all HUSB/WIFE child elements. Not dereferenced
+        Return list of partners in this marriage. all HUSB/WIFE child elements. Not dereferenced.
+
         :rtype: list of Husband or Wives
         """
         return self.get_list("HUSB") + self.get_list("WIFE")
@@ -634,6 +641,13 @@ class Note(Element):
 
     @property
     def full_text(self):
+        """
+        Return the full text of this note.
+        
+        Internally, notes are stores across many child nodes, with child
+        CONT/CONS child nodes that store the other lines. This method assembles
+        these elements into one continuusous string.
+        """
         result = "" + self.value or ''
 
         for cons in self.child_elements:
@@ -650,7 +664,8 @@ class Note(Element):
 
 def class_for_tag(tag):
     """
-    Return the class object for this `tag`
+    Return the class object for this `tag`.
+
     :param str tag: tag (e.g. INDI)
     :rtype: class (Element or something that's a subclass)
     """
