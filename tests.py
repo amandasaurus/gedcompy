@@ -203,5 +203,9 @@ class GedComTestCase(unittest.TestCase):
         individual = gedcom.Individual(level='foo')
         self.assertRaises(Exception, individual.set_levels_downward)
 
+    def testNote(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].note, 'foo')
+
 if __name__ == '__main__':
     unittest.main()
