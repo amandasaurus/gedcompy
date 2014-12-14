@@ -19,6 +19,10 @@ GEDCOM_FILE = """0 HEAD
 1 NAME Robert /Cox/
 1 NAME Bob /Cox/
 2 TYPE aka
+1 NAME
+2 GIVN Rob
+2 SURN Cox
+2 TYPE aka
 1 SEX M
 1 FAMS @F1@
 1 CHAN
@@ -56,7 +60,7 @@ class GedComTestCase(unittest.TestCase):
 
         bob = people[0]
         self.assertEquals(bob.name, ("Robert", "Cox"))
-        self.assertEquals(bob.aka, [("Bob", "Cox")])
+        self.assertEquals(bob.aka, [("Bob", "Cox"), ('Rob', 'Cox')])
         self.assertEquals(bob.sex, 'M')
         self.assertEquals(bob.gender, 'M')
         self.assertTrue(bob.is_male)
