@@ -2,9 +2,11 @@
 
 from setuptools import setup
 
+exec(open("./gedcom/_version.py").read())
+
 setup(
     name='gedcompy',
-    version='0.2',
+    version=__version__,
     packages=['gedcom',],
     license='GPLv3+',
     test_suite='tests',

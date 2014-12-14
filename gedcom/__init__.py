@@ -8,7 +8,7 @@ import numbers
 import os.path
 import six
 
-__version__ = "0.1.0"
+from ._version import __version__
 
 line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[_A-Z0-9]+)( (?P<value>.*))?$")
 
