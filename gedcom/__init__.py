@@ -193,11 +193,15 @@ class GedcomFile(object):
 
     def individual(self, **kwargs):
         """Create and return an Individual in this file."""
-        return self.element("INDI", **kwargs)
+        new_element = self.element("INDI", **kwargs)
+        self.add_element(new_element)
+        return new_element
 
     def family(self, **kwargs):
         """Create and return a Family that is in this file."""
-        return self.element("FAM", **kwargs)
+        new_element = self.element("FAM", **kwargs)
+        self.add_element(new_element)
+        return new_element
 
 
 class Element(object):
