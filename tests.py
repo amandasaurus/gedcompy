@@ -102,6 +102,7 @@ class GedComTestCase(unittest.TestCase):
 
         self.assertEquals(individual.tag, 'INDI')
         self.assertEquals(individual.level, 0)
+        self.assertEquals(individual.note, None)
 
         family = gedcomfile.family()
 
@@ -194,6 +195,13 @@ class GedComTestCase(unittest.TestCase):
         with open(outputfilename) as output:
             self.assertEqual(output.read(), GEDCOM_FILE)
         remove(outputfilename)
+
+    def testErrorWithBadTag(self):
+        self.assertRaises(Exception, gedcom.Individual, [], {'tag': 'FAM'})
+
+    def testErrorWithBadLevel(self):
+        individual = gedcom.Individual(level='foo')
+        self.assertRaises(Exception, individual.set_levels_downward)
 
 if __name__ == '__main__':
     unittest.main()
