@@ -232,6 +232,12 @@ class GedComTestCase(unittest.TestCase):
         self.assertRaises(TypeError, ind.set_sex, 'female')
         self.assertRaises(TypeError, ind.set_sex, 'male')
 
+    def testTitle(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 TITL King\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].title, 'King')
+
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].title, None)
 
 if __name__ == '__main__':
     unittest.main()
