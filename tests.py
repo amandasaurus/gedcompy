@@ -5,8 +5,7 @@ import tempfile
 from os import remove
 
 # Sample GEDCOM file from Wikipedia
-GEDCOM_FILE = """
-0 HEAD
+GEDCOM_FILE = """0 HEAD
 1 SOUR Reunion
 2 VERS V8.0
 2 CORP Leister Productions
