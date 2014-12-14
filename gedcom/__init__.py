@@ -643,7 +643,7 @@ class Note(Element):
     def full_text(self):
         """
         Return the full text of this note.
-        
+
         Internally, notes are stores across many child nodes, with child
         CONT/CONS child nodes that store the other lines. This method assembles
         these elements into one continuusous string.
