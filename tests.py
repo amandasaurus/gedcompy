@@ -66,6 +66,8 @@ class GedComTestCase(unittest.TestCase):
         self.assertTrue(bob.is_male)
         self.assertFalse(bob.is_female)
         self.assertEquals(bob.parents, [])
+        self.assertEquals(bob.father, None)
+        self.assertEquals(bob.mother, None)
 
         joann = people[1]
         self.assertEquals(joann.name, ("Joann", "Para"))
@@ -255,6 +257,9 @@ class GedComTestCase(unittest.TestCase):
 
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n0 TRLR")
         self.assertEqual(list(gedcomfile.individuals)[0].title, None)
+
+    def testParseError(self):
+        self.assertRaises(Exception, gedcom.parse_string, "foo")
 
 if __name__ == '__main__':
     unittest.main()
