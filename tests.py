@@ -207,5 +207,31 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n0 TRLR")
         self.assertEqual(list(gedcomfile.individuals)[0].note, 'foo')
 
+    def testBirth(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 BIRT\n2 DATE 1980\n2 PLAC London\n0 TRLR")
+        ind = list(gedcomfile.individuals)[0]
+        birth = ind.birth
+        self.assertEquals(birth.place, "London")
+        self.assertEquals(birth.date, "1980")
+
+    def testDeath(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 DEAT\n2 DATE 1980\n2 PLAC London\n0 TRLR")
+        ind = list(gedcomfile.individuals)[0]
+        death = ind.death
+        self.assertEquals(death.place, "London")
+        self.assertEquals(death.date, "1980")
+
+    def testSetSex(self):
+        gedcomfile = gedcom.GedcomFile()
+        ind = gedcomfile.individual()
+        ind.set_sex('m')
+        ind.set_sex('M')
+        ind.set_sex('f')
+        ind.set_sex('F')
+        self.assertRaises(TypeError, ind.set_sex, 'foo')
+        self.assertRaises(TypeError, ind.set_sex, 'female')
+        self.assertRaises(TypeError, ind.set_sex, 'male')
+
+
 if __name__ == '__main__':
     unittest.main()
