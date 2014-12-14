@@ -141,7 +141,7 @@ class GedcomFile(object):
 
         for line in self.gedcom_lines():
             fileout.write(line.encode("utf8"))
-            fileout.write("\n")
+            fileout.write("\n".encode("utf8"))
 
     def ensure_header_trailer(self):
         """
