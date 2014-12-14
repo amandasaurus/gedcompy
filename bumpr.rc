@@ -11,6 +11,10 @@ files = README.rst
 [bump]
 message = 'Commit version {version}'
 
+[prepare]
+suffix = dev
+message = Prepare version {version} for next development cycle
+
 [changelog]
 file = CHANGELOG.rst
 bump = {version} ({date:%Y-%m-%d})
