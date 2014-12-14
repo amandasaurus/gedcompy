@@ -211,6 +211,19 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n0 TRLR")
         self.assertEqual(list(gedcomfile.individuals)[0].note, 'foo')
 
+    def testNoteCont(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n2 CONT bar\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].note, 'foo\nbar')
+
+    def testNoteConc(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n2 CONC bar\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].note, 'foobar')
+
+    def testNoteError(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 NOTE foo\n2 TITL bar\n0 TRLR")
+        ind = list(gedcomfile.individuals)[0]
+        self.assertRaises(ValueError, lambda : ind.note)
+
     def testBirth(self):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n1 BIRT\n2 DATE 1980\n2 PLAC London\n0 TRLR")
         ind = list(gedcomfile.individuals)[0]
