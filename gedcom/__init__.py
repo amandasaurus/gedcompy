@@ -136,7 +136,7 @@ class GedcomFile(object):
                 # TODO better exception
                 raise Exception("File exists")
             else:
-                with open(fileout, "w") as fp:
+                with open(fileout, "wb") as fp:
                     return self.save(fp)
 
         for line in self.gedcom_lines():

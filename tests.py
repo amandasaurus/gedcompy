@@ -133,7 +133,7 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile.save(outputfile)
         outputfile.seek(0,0)
         
-        self.assertEqual(outputfile.read(), GEDCOM_FILE)
+        self.assertEqual(outputfile.read(), GEDCOM_FILE.encode("utf8"))
         self.assertRaises(Exception, gedcomfile.save, (outputfilename))
         outputfile.close()
         
