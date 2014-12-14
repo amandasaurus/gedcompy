@@ -101,7 +101,52 @@ class GedComTestCase(unittest.TestCase):
         self.assertEquals(individual.level, 0)
 
         self.assertEqual(gedcomfile.gedcom_lines_as_string(), '0 HEAD\n1 SOUR\n2 NAME gedcompy\n2 VERS 0.1.0\n1 CHAR UNICODE\n1 GEDC\n2 VERS 5.5\n2 FORM LINEAGE-LINKED\n0 @I1@ INDI\n1 SEX M\n0 TRLR')
+        self.assertEqual(repr(gedcomfile), "GedcomFile(\nElement(0, 'HEAD', [Element(1, 'SOUR', [Element(2, 'NAME', 'gedcompy'), Element(2, 'VERS', '0.1.0')]), Element(1, 'CHAR', 'UNICODE'), Element(1, 'GEDC', [Element(2, 'VERS', '5.5'), Element(2, 'FORM', 'LINEAGE-LINKED')])]),\nIndividual(0, 'INDI', '@I1@', [Element(1, 'SEX', 'M')]),\nElement(0, 'TRLR'))")
 
+    def testCanOnlyAddIndividualOrFamilyToFile(self):
+        gedcomfile = gedcom.GedcomFile()
+        title = gedcom.Element(tag="TITL")
+        self.assertRaises(Exception, gedcomfile.add_element, (title))
+
+    def testCanAddIndividualRaw(self):
+        gedcomfile = gedcom.GedcomFile()
+        element = gedcom.Element(tag="INDI")
+        gedcomfile.add_element(element)
+
+    def testCanAddFamilyRaw(self):
+        gedcomfile = gedcom.GedcomFile()
+        element = gedcom.Element(tag="FAM")
+        gedcomfile.add_element(element)
+
+    def testCanAddIndividualObj(self):
+        gedcomfile = gedcom.GedcomFile()
+        element = gedcom.Individual()
+        gedcomfile.add_element(element)
+
+    def testCanAddFamilyObj(self):
+        gedcomfile = gedcom.GedcomFile()
+        element = gedcom.Family()
+        gedcomfile.add_element(element)
+
+    def testIndividualIdsWork(self):
+        gedcomfile = gedcom.GedcomFile()
+        element1 = gedcom.Individual()
+        element2 = gedcom.Individual()
+        self.assertEqual(element1.id, None)
+        self.assertEqual(element2.id, None)
+
+        gedcomfile.add_element(element1)
+        gedcomfile.add_element(element2)
+
+        self.assertEqual(element1.id, '@I1@')
+        self.assertEqual(element2.id, '@I2@')
+
+    def testIdAssismentIsRobust(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n2 SURN Cox\n\n0 TRLR")
+        element1 = gedcom.Individual()
+        self.assertEqual(element1.id, None)
+        gedcomfile.add_element(element1)
+        self.assertEqual(element1.id, '@I2@')
 
     def testCanAutoDetectInputFP(self):
         fp = six.StringIO(GEDCOM_FILE)
