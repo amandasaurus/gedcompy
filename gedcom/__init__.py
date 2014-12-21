@@ -387,6 +387,7 @@ class Individual(Element):
         """
         Return this person's name.
 
+        Returns a tuple of (firstname, lastname). If firstname or lastname isn't in the file, then None is returned.
         :returns: (firstname, lastname)
         """
         name_tag = self['NAME']
@@ -405,12 +406,33 @@ class Individual(Element):
             preferred_name = name_tag
 
         if preferred_name.value in ('', None):
-            first = preferred_name['GIVN'].value
-            last = preferred_name['SURN'].value
+            try:
+                first = preferred_name['GIVN'].value
+            except IndexError:
+                first = None
+            try:
+                last = preferred_name['SURN'].value
+            except IndexError:
+                last = None
         else:
-            first, last, dud = preferred_name.value.split("/")
-            first = first.strip()
-            last = last.strip()
+            vals = preferred_name.value.split("/")
+            if len(vals) == 0:
+                # nothing
+                # FIXME fix this
+                raise Exception
+            elif len(vals) == 1:
+                # Only first name
+                first = vals[0].strip()
+                last = None
+            elif len(vals) == 2:
+                # malformed line
+                raise Exception
+            elif len(vals) == 3:
+                # Normal
+                first, last, dud = vals
+
+                first = first.strip()
+                last = last.strip()
 
         return first, last
 

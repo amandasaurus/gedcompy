@@ -263,5 +263,13 @@ class GedComTestCase(unittest.TestCase):
     def testParseError(self):
         self.assertRaises(Exception, gedcom.parse_string, "foo")
 
+    def testFirstNameOnly1(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 GIVN Bob\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].name, ('Bob', None))
+
+    def testFirstNameOnly2(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].name, ('Bob', None))
+
 if __name__ == '__main__':
     unittest.main()
