@@ -271,5 +271,17 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob\n0 TRLR")
         self.assertEqual(list(gedcomfile.individuals)[0].name, ('Bob', None))
 
+    def testLastNameOnly1(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME\n2 SURN Bob\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].name, (None, 'Bob'))
+
+    def testEmptyName(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME \n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].name, (None, None))
+
+    def testInvalidNames(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Russel\n0 TRLR")
+        self.assertRaises(Exception, lambda : list(gedcomfile.individuals)[0].name)
+
 if __name__ == '__main__':
     unittest.main()

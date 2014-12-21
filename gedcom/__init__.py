@@ -416,11 +416,8 @@ class Individual(Element):
                 last = None
         else:
             vals = preferred_name.value.split("/")
-            if len(vals) == 0:
-                # nothing
-                # FIXME fix this
-                raise Exception
-            elif len(vals) == 1:
+            assert len(vals) > 0
+            if len(vals) == 1:
                 # Only first name
                 first = vals[0].strip()
                 last = None
