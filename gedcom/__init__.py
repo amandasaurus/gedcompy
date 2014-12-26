@@ -759,9 +759,16 @@ def parse(obj):
         return parse_fp(obj)
 
 def chardet_from_bom(string):
-    if isinstance(string, unicode):
-        # Already as a unicode, do nothing
-        return (None, string)
+    if six.PY2:
+        if isinstance(string, unicode):
+            # Already as a unicode, do nothing
+            return (None, string)
+    elif six.PY3:
+        if isinstance(string, str):
+            # Already as a unicode, do nothing
+            return (None, string)
+    else:
+        raise NotImplementedError()
 
     # NB order of checking (utf32 before utf16 is important here. All utf32's
     # will start with a utf16 BOM)
