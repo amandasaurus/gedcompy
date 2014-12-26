@@ -292,9 +292,11 @@ class GedComTestCase(unittest.TestCase):
     #    self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
 
 
-    def _test_encoded_with_bom(desired_encoding):
+    def _test_encoded_with_bom(desired_encoding, include_bom=False):
         def test(self):
             filecontent = u"0 HEAD\n0 @I1@ INDI\n1 NAME Böb /Rüßel/\n0 TRLR"
+            if include_bom:
+                filecontent = u"\uFEFF" + filecontent
             encoded_content = filecontent.encode(desired_encoding)
 
             gedcomfile = gedcom.parse_string(encoded_content)
@@ -303,13 +305,16 @@ class GedComTestCase(unittest.TestCase):
         test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
         return test
 
-    # utf{16,32} always include a BOM. we want utf8 with a bom, which is utf-8-sig
-    testUnicodeUTF8WithBOM = _test_encoded_with_bom("utf-8-sig")
-    testUnicodeUTF16LEWithBOM = _test_encoded_with_bom("utf-16-le")
-    testUnicodeUTF16BEWithBOM = _test_encoded_with_bom("utf-16-be")
-    testUnicodeUTF32WithBOM = _test_encoded_with_bom("utf-32")
-    testUnicodeUTF32LEWithBOM = _test_encoded_with_bom("utf-32-le")
-    testUnicodeUTF32BEWithBOM = _test_encoded_with_bom("utf-32-be")
+    # Some encodings (e.g. UTF16) will put in a BOM to tell you which
+    # endianiness it used. if you specify the endianness, then it won't put in
+    # a BOM. But we want to generate strings that always have a BOM
+    testUnicodeUTF8WithBOM = _test_encoded_with_bom("utf-8", True)
+    testUnicodeUTF16WithBOM = _test_encoded_with_bom("utf-16", False)
+    testUnicodeUTF16LEWithBOM = _test_encoded_with_bom("utf-16-le", True)
+    testUnicodeUTF16BEWithBOM = _test_encoded_with_bom("utf-16-be", True)
+    testUnicodeUTF32WithBOM = _test_encoded_with_bom("utf-32", False)
+    testUnicodeUTF32LEWithBOM = _test_encoded_with_bom("utf-32-le", True)
+    testUnicodeUTF32BEWithBOM = _test_encoded_with_bom("utf-32-be", True)
 
     def _test_encoded_with_head_char(char_encoding_value, desired_encoding):
         def test(self):
