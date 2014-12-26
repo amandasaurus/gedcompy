@@ -7,10 +7,11 @@ import re
 import numbers
 import os.path
 import six
+import codecs
 
 from ._version import __version__
 
-line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[_A-Z0-9]+)( (?P<value>.*))?$")
+line_format = re.compile(u"^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[_A-Z0-9]+)( (?P<value>.*))?$")
 
 
 class GedcomFile(object):
@@ -723,6 +724,9 @@ def parse_string(string):
     :param str string: Filename to parse
     :returns: GedcomFile instance
     """
+    encoding, string = chardet_from_bom(string)
+    if encoding:
+        string = string.decode(encoding)
     return __parse(string.split("\n"))
 
 
@@ -754,17 +758,49 @@ def parse(obj):
     else:
         return parse_fp(obj)
 
+def chardet_from_bom(string):
+    if isinstance(string, unicode):
+        # Already as a unicode, do nothing
+        return (None, string)
+
+    # NB order of checking (utf32 before utf16 is important here. All utf32's
+    # will start with a utf16 BOM)
+
+    if string.startswith(codecs.BOM_UTF8):
+        return ('utf-8', string[len(codecs.BOM_UTF8):])
+    elif string.startswith(codecs.BOM_UTF32_BE):
+        return ('utf-32-be', string[len(codecs.BOM_UTF32_BE):])
+    elif string.startswith(codecs.BOM_UTF32_LE):
+        return ('utf-32-le', string[len(codecs.BOM_UTF32_LE):])
+    elif string.startswith(codecs.BOM_UTF16_BE):
+        return ('utf-16-be', string[len(codecs.BOM_UTF16_BE):])
+    elif string.startswith(codecs.BOM_UTF16_LE):
+        return ('utf-16-le', string[len(codecs.BOM_UTF16_LE):])
+    else:
+        return (None, string)
+    
+
 
 def __parse(lines_iter):
     current_level = 0
     level_to_obj = {}
     gedcom_file = GedcomFile()
+    encoding = None
 
     for linenum, line in enumerate(lines_iter):
         line = line.strip()
+
+        if encoding is None:
+            encoding, line = chardet_from_bom(line)
+        
+        if encoding is not None:
+            line = line.decode(encoding)
+
         if line == '':
             continue
+
         match = line_format.match(line)
+
         if not match:
             raise NotImplementedError(line)
 
