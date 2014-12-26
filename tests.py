@@ -340,6 +340,8 @@ class GedComTestCase(unittest.TestCase):
         individual = gedcomfile.individual()
         # Ensure we get a exception
         self.assertRaises(Exception, lambda: individual.set_name(u"Böb", u"Rüßel"))
+        # no excpetion
+        individual.set_name(u"Bob", u"Russel")
         
 if __name__ == '__main__':
     unittest.main()
