@@ -302,7 +302,7 @@ class GedComTestCase(unittest.TestCase):
             gedcomfile = gedcom.parse_string(encoded_content)
             self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
 
-        test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
+        test.__doc__ = "Should not get an exception with encoding {0}".format(desired_encoding)
         return test
 
     # Some encodings (e.g. UTF16) will put in a BOM to tell you which
@@ -324,7 +324,7 @@ class GedComTestCase(unittest.TestCase):
             gedcomfile = gedcom.parse_string(encoded_content)
             self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
 
-        test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
+        test.__doc__ = "Should not get an exception with encoding {0}".format(desired_encoding)
         return test
 
     testUnicodeUTF8WithHeadChar = _test_encoded_with_head_char("UTF-8", "utf8")
