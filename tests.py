@@ -1,8 +1,10 @@
+# encoding: utf-8
 import unittest
 import gedcom
 import six
 import tempfile
 from os import remove
+import codecs
 
 # Sample GEDCOM file from Wikipedia
 GEDCOM_FILE = """0 HEAD
@@ -282,6 +284,32 @@ class GedComTestCase(unittest.TestCase):
     def testInvalidNames(self):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Russel\n0 TRLR")
         self.assertRaises(Exception, lambda : list(gedcomfile.individuals)[0].name)
+
+    #def testUnicodeUTF8(self):
+    #    # FIXME decide what should happen to BOM-less 
+    #    # Read up spec and check default char encoding
+    #    gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME B\xC3\xB6b /R\xC3\xBC\xC3\x9Fel/\n0 TRLR")
+    #    self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
+
+
+    def _test_encoded_with_bom(desired_encoding):
+        def test(self):
+            bom = u'\uFEFF'
+            filecontent = bom + u"0 HEAD\n0 @I1@ INDI\n1 NAME Böb /Rüßel/\n0 TRLR"
+            encoded_content = filecontent.encode(desired_encoding)
+
+            gedcomfile = gedcom.parse_string(encoded_content)
+            self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
+
+        test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
+        return test
+
+    testUnicodeUTF8WithBOM = _test_encoded_with_bom("utf-8")
+    testUnicodeUTF16LEWithBOM = _test_encoded_with_bom("utf-16-le")
+    testUnicodeUTF16BEWithBOM = _test_encoded_with_bom("utf-16-be")
+    testUnicodeUTF32WithBOM = _test_encoded_with_bom("utf-32")
+    testUnicodeUTF32LEWithBOM = _test_encoded_with_bom("utf-32-le")
+    testUnicodeUTF32BEWithBOM = _test_encoded_with_bom("utf-32-be")
 
 if __name__ == '__main__':
     unittest.main()
