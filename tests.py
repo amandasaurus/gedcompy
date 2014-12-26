@@ -294,8 +294,7 @@ class GedComTestCase(unittest.TestCase):
 
     def _test_encoded_with_bom(desired_encoding):
         def test(self):
-            bom = u'\uFEFF'
-            filecontent = bom + u"0 HEAD\n0 @I1@ INDI\n1 NAME Böb /Rüßel/\n0 TRLR"
+            filecontent = u"0 HEAD\n0 @I1@ INDI\n1 NAME Böb /Rüßel/\n0 TRLR"
             encoded_content = filecontent.encode(desired_encoding)
 
             gedcomfile = gedcom.parse_string(encoded_content)
@@ -304,7 +303,8 @@ class GedComTestCase(unittest.TestCase):
         test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
         return test
 
-    testUnicodeUTF8WithBOM = _test_encoded_with_bom("utf-8")
+    # utf{16,32} always include a BOM. we want utf8 with a bom, which is utf-8-sig
+    testUnicodeUTF8WithBOM = _test_encoded_with_bom("utf-8-sig")
     testUnicodeUTF16LEWithBOM = _test_encoded_with_bom("utf-16-le")
     testUnicodeUTF16BEWithBOM = _test_encoded_with_bom("utf-16-be")
     testUnicodeUTF32WithBOM = _test_encoded_with_bom("utf-32")
