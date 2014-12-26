@@ -758,6 +758,7 @@ def parse(obj):
     else:
         return parse_fp(obj)
 
+
 def chardet_from_bom(string):
     if isinstance(string, six.text_type):
         # Already as a unicode, do nothing
@@ -778,7 +779,6 @@ def chardet_from_bom(string):
         return ('utf-16-le', string[len(codecs.BOM_UTF16_LE):])
     else:
         return (None, string)
-    
 
 
 def __parse(lines_iter):
@@ -792,7 +792,7 @@ def __parse(lines_iter):
 
         if encoding is None:
             encoding, line = chardet_from_bom(line)
-        
+
         if encoding is not None:
             line = line.decode(encoding)
 
