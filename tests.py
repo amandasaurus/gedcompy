@@ -311,5 +311,29 @@ class GedComTestCase(unittest.TestCase):
     testUnicodeUTF32LEWithBOM = _test_encoded_with_bom("utf-32-le")
     testUnicodeUTF32BEWithBOM = _test_encoded_with_bom("utf-32-be")
 
+    def _test_encoded_with_head_char(char_encoding_value, desired_encoding):
+        def test(self):
+            filecontent = u"0 HEAD\n1 CHARACTER SET {0}\n0 @I1@ INDI\n1 NAME Böb /Rüßel/\n0 TRLR".format(char_encoding_value)
+            encoded_content = filecontent.encode(desired_encoding)
+
+            gedcomfile = gedcom.parse_string(encoded_content)
+            self.assertEqual(list(gedcomfile.individuals)[0].name, (u'Böb', u'Rüßel'))
+
+        test.__doc__ = "Should not get an exception with encoding {}".format(desired_encoding)
+        return test
+
+    testUnicodeUTF8WithHeadChar = _test_encoded_with_head_char("UTF-8", "utf8")
+    testUnicodeUTF8WithHeadChar = _test_encoded_with_head_char("UNICODE", "utf16")
+
+    def _testUnicodeCantDoAsciiWithNonAscii(self):
+        # FIXME finish this
+        gedcomfile = gedcom.GedcomFile()
+        individual = gedcomfile.individual()
+        individual.set_name(u"Böb", u"Rüßel")
+        
+        # Add HEAD CHARACTER tag.
+        # Ensure we get a exception
+        #self.assertRaises(Exception, gedcomfile.ge
+
 if __name__ == '__main__':
     unittest.main()
