@@ -328,12 +328,13 @@ class GedComTestCase(unittest.TestCase):
     def _testUnicodeCantDoAsciiWithNonAscii(self):
         # FIXME finish this
         gedcomfile = gedcom.GedcomFile()
-        individual = gedcomfile.individual()
-        individual.set_name(u"Böb", u"Rüßel")
-        
-        # Add HEAD CHARACTER tag.
-        # Ensure we get a exception
-        #self.assertRaises(Exception, gedcomfile.ge
+        gedcomfile.ensure_header_trailer()
+    
+        gedcomfile['HEAD'].element('CHARACTER SET' , value="ASCII")
 
+        individual = gedcomfile.individual()
+        # Ensure we get a exception
+        self.assertRaises(Exception, lambda: individual.set_name(u"Böb", u"Rüßel"))
+        
 if __name__ == '__main__':
     unittest.main()
