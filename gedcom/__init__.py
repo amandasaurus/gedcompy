@@ -760,6 +760,12 @@ def parse(obj):
 
 
 def chardet_from_bom(string):
+    """
+    Given a non-unicode string that includes an appropriate BOM, return the name of the character encoding, and the rest of the string after the BOM.
+
+    :param str: string, a binary/non-unicode string
+    :returns: (python character encoding, rest of string)
+    """
     if isinstance(string, six.text_type):
         # Already as a unicode, do nothing
         return (None, string)
