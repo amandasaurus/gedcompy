@@ -10,7 +10,7 @@ setup(
     packages=['gedcom',],
     license='GPLv3+',
     test_suite='tests',
-    description="Parse and create GEDCOM (geneology) files",
+    description="Parse and create GEDCOM (genealogy) files",
     author="Rory McCann",
     author_email="rory@technomancy.org",
     classifiers=[
