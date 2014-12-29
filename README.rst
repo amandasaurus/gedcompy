@@ -8,7 +8,7 @@ gedcompy
   :target: https://coveralls.io/r/rory/gedcompy?branch=master
 
 
-Python library to parse and work with `GEDCOM <https://en.wikipedia.org/wiki/GEDCOM>`_ (geneology/family tree) files.
+Python library to parse and work with `GEDCOM <https://en.wikipedia.org/wiki/GEDCOM>`_ (genealogy/family tree) files.
 
 It's goal is to support GEDCOM v5.5 (`specification here <http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm>`_).
 
