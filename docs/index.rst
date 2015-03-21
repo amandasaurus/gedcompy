@@ -11,6 +11,7 @@ Contents
    
     reading-and-writing
     working-with-gedcom-files
+    api
 
 
 .. include:: ../README.rst
