@@ -14,8 +14,7 @@ line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[-a-zA-Z0-9]+@) )?(?P<tag>
 
 
 class GedcomFile(object):
-
-    """ Represents a GEDCOM file.  """
+    """Represents a GEDCOM file."""
 
     def __init__(self):
         """Instanciate a GEDCOM object."""
@@ -205,7 +204,6 @@ class GedcomFile(object):
 
 
 class Element(object):
-
     """
     Generic represetation for a GEDCOM element.
 
@@ -347,7 +345,7 @@ tags_to_classes = {}
 
 
 def register_tag(tag):
-    """ Internal class decorator to mark a python class as to be the handler for this tag.  """
+    """Internal class decorator to mark a python class as to be the handler for this tag."""
     def classdecorator(klass):
         global tags_to_classes
         tags_to_classes[tag] = klass
@@ -358,7 +356,6 @@ def register_tag(tag):
 
 @register_tag("INDI")
 class Individual(Element):
-
     """Represents and INDI (Individual) element."""
 
     @property
@@ -527,12 +524,12 @@ class Individual(Element):
 
     @property
     def is_female(self):
-        """ Return True iff this person is recorded as female. """
+        """Return True iff this person is recorded as female."""
         return self.sex.lower() == 'f'
 
     @property
     def is_male(self):
-        """ Return True iff this person is recorded as male. """
+        """Return True iff this person is recorded as male."""
         return self.sex.lower() == 'm'
 
     def set_sex(self, sex):
@@ -562,7 +559,6 @@ class Individual(Element):
 
 @register_tag("FAM")
 class Family(Element):
-
     """Represents a family 'FAM' tag."""
 
     @property
@@ -576,7 +572,6 @@ class Family(Element):
 
 
 class Spouse(Element):
-
     """Generic base class for HUSB/WIFE."""
 
     def as_individual(self):
@@ -592,7 +587,6 @@ class Spouse(Element):
 
 @register_tag("HUSB")
 class Husband(Spouse):
-
     """Represents pointer to a husband in a family."""
 
     pass
@@ -600,14 +594,12 @@ class Husband(Spouse):
 
 @register_tag("WIFE")
 class Wife(Spouse):
-
     """Represents pointer to a husband in a family."""
 
     pass
 
 
 class Event(Element):
-
     """Generic base class for events, like :py:class:`Birth` (BIRT) etc."""
 
     @property
@@ -635,7 +627,6 @@ class Event(Element):
 
 @register_tag("BIRT")
 class Birth(Event):
-
     """Represents a birth (BIRT)."""
 
     pass
@@ -643,7 +634,6 @@ class Birth(Event):
 
 @register_tag("DEAT")
 class Death(Event):
-
     """Represents a death (DEAT)."""
 
     pass
@@ -651,7 +641,6 @@ class Death(Event):
 
 @register_tag("MARR")
 class Marriage(Event):
-
     """Represents a marriage (MARR)."""
 
     pass
@@ -659,7 +648,6 @@ class Marriage(Event):
 
 @register_tag("NOTE")
 class Note(Element):
-
     """Represents a note (NOTE)."""
 
     @property
