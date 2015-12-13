@@ -283,5 +283,9 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Russel\n0 TRLR")
         self.assertRaises(Exception, lambda : list(gedcomfile.individuals)[0].name)
 
+    def testDashInID(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1-123@ INDI\n1 NAME\n2 GIVN Bob\n0 TRLR")
+        self.assertEqual(list(gedcomfile.individuals)[0].name, ('Bob', None))
+
 if __name__ == '__main__':
     unittest.main()
