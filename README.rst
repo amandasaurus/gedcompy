@@ -33,10 +33,9 @@ The file as a whole is a generator object.
 >>> import gedcom
 >>> gedfile = gedcom.parse("myfamilytree.ged")
 >>> print gedfile
-GedcomFile(
-Element(0, 'HEAD', [Element(1, 'CHAR', 'UTF-8'), Element(1, 'SOUR', 'Ancestry.com Family Trees', [Element(2, 'VERS', '(2010.3)'), Element(2, 'NAME', 'Ancestry.com Family Trees'), Element(2, 'CORP', 'Ancestry.com')]), Element(1, 'GEDC', [Element(2, 'VERS', '5.5'), Element(2, 'FORM', 'LINEAGE-LINKED')])]),
-Individual(0, 'INDI', '@P1@', [Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')]), Element(1, 'SEX', 'M'), Element(1, 'NAME', 'John /Smith/'), Element(1, 'FAMC', '@F1@')])
-Individual(0, 'INDI', '@P2@', [Element(1, 'NAME', 'Jane /Doe/'), Element(1, 'SEX', 'M'), Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')]), Element(1, 'FAMS', '@F1@')])
+# GedcomFile(Element(0, 'HEAD', [Element(1, 'CHAR', 'UTF-8'), Element(1, 'SOUR', 'Ancestry.com Family Trees', [Element(2, 'VERS', '(2010.3)'), Element(2, 'NAME', 'Ancestry.com Family Trees'), Element(2, 'CORP', 'Ancestry.com')]), Element(1, 'GEDC', [Element(2, 'VERS', '5.5'), Element(2, 'FORM', 'LINEAGE-LINKED')])]),
+# Individual(0, 'INDI', '@P1@', [Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')]), Element(1, 'SEX', 'M'), Element(1, 'NAME', 'John /Smith/'), Element(1, 'FAMC', '@F1@')])
+# Individual(0, 'INDI', '@P2@', [Element(1, 'NAME', 'Jane /Doe/'), Element(1, 'SEX', 'M'), Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')]), Element(1, 'FAMS', '@F1@')])
 ```
 
 ### Individuals
@@ -44,7 +43,7 @@ Cannot access individuals as a whole:
 
 ```python
 >>> print gedfile.individuals
-<generator object <genexpr> at 0x103ef25a0>
+# <generator object <genexpr> at 0x103ef25a0>
 >>> print gedfile.individual # Probably Don't.
 # Don't do this. It prints all individual records in the file.
 ```
@@ -54,16 +53,16 @@ To access individual records:
 ```python
 >>> for person in gedfile.individuals:
 ...     print person
-Individual(0, 'INDI', '@P1@', [Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')]), Element(1, 'SEX', 'M'), Element(1, 'NAME', 'John /Smith/'), Element(1, 'FAMC', '@F1@')])
-Individual(0, 'INDI', '@P2@', [Element(1, 'NAME', 'Jane /Doe/'), Element(1, 'SEX', 'M'), Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')]), Element(1, 'FAMS', '@F1@')])
+# Individual(0, 'INDI', '@P1@', [Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')]), Element(1, 'SEX', 'M'), Element(1, 'NAME', 'John /Smith/'), Element(1, 'FAMC', '@F1@')])
+# Individual(0, 'INDI', '@P2@', [Element(1, 'NAME', 'Jane /Doe/'), Element(1, 'SEX', 'M'), Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')]), Element(1, 'FAMS', '@F1@')])
 ```
 To access individual records of a specific type use dot notation:
 
 ```python
 >>> for person in gedfile.individuals:
 ...     print person.birth
-Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')])
-Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')])
+# Birth(1, 'BIRT', [Element(2, 'DATE', '03 dec 1970')])
+# Birth(1, 'BIRT', [Element(2, 'DATE', '06 nov 1946'), Element(2, 'PLAC', 'Brooklyn, New York City, New York, USA')])
 ```
 
 To specify individual record types:
@@ -71,8 +70,8 @@ To specify individual record types:
 ```python
 >>> for person in gedfile.individuals:
 ...     print person.birth.date
-03 dec 1970
-06 nov 1946
+# 03 dec 1970
+# 06 nov 1946
 >>> for person in gedfile.individuals:
 ...     print person.birth.place
 # AttributeError: 'NoneType' object has no attribute 'value'
@@ -88,8 +87,8 @@ To bypass this error use a try/except case to pass over records that don't exist
 ...         print person.birth.place
 ...     except AttributeError:
 ...        print "There is no birth place record for this person"
-There is no birth place record for this person
-Brooklyn, New York City, New York, USA
+# There is no birth place record for this person
+# Brooklyn, New York City, New York, USA
 ```
 ##### current available use cases
 ```
@@ -133,8 +132,8 @@ Get the name of a person and parents of that person:
 ...     except AttributeError:
 ...        print "no parent name record for this person"
 # either one will print:
-('John', 'Doe') ('Jack', 'Doe') ('Jane', 'Doe')
-('Jenny', 'Doe') ('Jack', 'Doe') ('Jane', 'Doe')
+# ('John', 'Doe') ('Jack', 'Doe') ('Jane', 'Doe')
+# ('Jenny', 'Doe') ('Jack', 'Doe') ('Jane', 'Doe')
 ```
 
 ### Families
@@ -143,19 +142,19 @@ Family records are accessed the same way as individuals
 
 ```python
 >>> print gedfile.families
-<generator object <genexpr> at 0x10523c7d0>
->>> print gedfile.family # Probably don't do this
+# <generator object <genexpr> at 0x10523c7d0>
+>>> print gedfile.family # Probably don't.
 # Don't do this. Prints all family records in the family
 ```
 
 ```python
 >>> for family in gedfile.families:
 ...     print family
-Family(0, 'FAM', '@F1@', [Husband(1, 'HUSB', '@P5@'), Wife(1, 'WIFE', '@P1@'), Element(1, 'CHIL', '@P2@', [Element(2, '_FREL', 'Natural'), Element(2, '_MREL', 'Natural')])])
+# Family(0, 'FAM', '@F1@', [Husband(1, 'HUSB', '@P5@'), Wife(1, 'WIFE', '@P1@'), Element(1, 'CHIL', '@P2@', [Element(2, '_FREL', 'Natural'), Element(2, '_MREL', 'Natural')])])
 
 >>> for family in gedfile.families:
 ...     print family.partners
-[Husband(1, 'HUSB', '@P5@'), Wife(1, 'WIFE', '@P1@')]
+# [Husband(1, 'HUSB', '@P5@'), Wife(1, 'WIFE', '@P1@')]
 ```
 
 Use cases for partners:
@@ -164,16 +163,16 @@ Use cases for partners:
 >>> for family in gedfile.families:
 ...     print family.partners[0]
 ...     print family.partners[1]
-Husband(1, 'HUSB', '@P5@')
-Wife(1, 'WIFE', '@P1@')
+# Husband(1, 'HUSB', '@P5@')
+# Wife(1, 'WIFE', '@P1@')
 
 >>> for family in gedfile.families:
 ...     print family.partners[0].tag
-HUSB
+# HUSB
 
 >>> for family in gedfile.families:
 ...     print family.partners[0].value
-@P5@
+# @P5@
 ```
 
 ##### current available use cases
