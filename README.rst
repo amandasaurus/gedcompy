@@ -79,33 +79,23 @@ To specify individual record types:
 ```
 The AttributeError is thrown when a record of that type does not exist, and by default will NOT pass onto the next record.
 
-To bypass this error use a try/except case to pass over records that don't exist
 
-```python
->>> for person in gedfile.individuals:
-...     try:
-...         print person.birth.place
-...     except AttributeError:
-...        print "There is no birth place record for this person"
-# There is no birth place record for this person
-# Brooklyn, New York City, New York, USA
-```
 ##### current available use cases
 ```
-person.birth              # birth info
+person.birth              # class - birth
 person.birth.place        # string
 person.birth.date         # string
-person.death              # death info
+person.death              # class - death
 person.death.place        # string
 person.death.date         # string
-person.name               # return first and last name as a tuple
-person.father             # father full info
-person.mother             # mother full info
-person.parents            # list both parents full info index[0] is father index[1] is mother
-person.aka                # list 'also known as' name
-person.gender             # string : 'M' or 'F'
-person.sex                # same as gender
-person.id                 # @P12@
+person.name               # tuple - firstname, lastname
+person.father             # class - father
+person.mother             # class - mother
+person.parents            # list - contaning father and mother class
+person.aka                # list - 'also known as' name
+person.gender             # string - 'M' or 'F'
+person.sex                # string - ''     ''
+person.id                 # string - @P12@
 person.is_female          # boolean
 person.is_male            # boolean
 person.note               # string
@@ -173,17 +163,53 @@ Use cases for partners:
 >>> for family in gedfile.families:
 ...     print family.partners[0].value
 # @P5@
+
+>>> for family in gedfile.families:
+...     print family.husband
+...     print family.wife
+# Husband(1, 'HUSB', '@P5@')
+# Wife(1, 'WIFE', '@P1@')
 ```
+
+Use cases for children
 
 ##### current available use cases
 
 ```
-family.id           # string '@F49@'
-family.tag          # string 'FAM'
-family.partners     # list 
+family.id                       # string '@F49@'
+family.tag                      # string 'FAM'
+family.partners                 # list 
+family.wife                     # class - wife
+family.husband                  # class - husband
+family.children                 # list
+family.children.father_relation # String 'Natural'
+family.children.mother_relation # string 'Natural'
 ```
 
-### dates
+### Error Handling
+By default, if a record doesn't exist an error will be raised and will not continue onto the rest of the records. This is on purpose, but can by bypassed by using try/except cases. The most common errors that are raised are IndexError and AttributeError
+
+```python
+>>> for person in gedfile.individuals:
+...     try:
+...         print person.birth.place
+...     except AttributeError:
+...        print "There is no birth place record for this person"
+# There is no birth place record for this person
+# Brooklyn, New York City, New York, USA
+```
+```python
+>>> for family in gedfile.families:
+...     try:
+...         print family.marriage
+...     except IndexError as e:
+...         print "no record: ", e
+# Marriage(1, 'MARR', [Element(2, 'DATE', '08 Aug 1854')])
+# no record: IndexError: list index out of range
+# Marriage(1, 'MARR', [Element(2, 'DATE', '1954')])
+```
+
+### Dates
 Dates are user input and can vary wildly in formatting. There are also approximate dates that cannot be formatted. 
 These approximate dates can be stripped out using `re` or just `str.replace()`
 

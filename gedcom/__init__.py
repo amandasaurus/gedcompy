@@ -617,23 +617,6 @@ class Family(Element):
         """
         return self.get_list("CHIL")
 
-    @property
-    def father_relation(self):
-        """
-        return child relation to father
-        """
-        pass
-        # return self['FREL'].value
-
-    @property
-    def mother_relation(self):
-        """
-        return child relation to mother
-        """
-        pass
-        # return self['MREL'].value
-
-
 class Spouse(Element):
     """Generic base class for HUSB/WIFE."""
 
@@ -674,6 +657,51 @@ class Children(Element):
         """
 
         return self.gedcom_file[self.value]
+
+
+    @property
+    def father_relation(self):
+        """
+        Return child relation to father
+
+        :returns: Natural if it exists
+        :raise NotImplementedError: if anything other than Natural
+        :rtype: string
+        """
+        father_relation = self.get_list("_FREL")
+        if father_relation[0].value == "Natural":
+            return father_relation[0].value
+        else:
+            raise NotImplementedError()
+
+
+    @property
+    def mother_relation(self):
+        """
+        Return child relation to mother
+
+        :returns: Natural if it exists
+        :raise NotImplementedError: if anything other than Natural
+        :rtype: string
+        """
+        mother_relation = self.get_list("_MREL")
+        if mother_relation[0].value =="Natural":
+            return mother_relation[0].value
+        else:
+            raise NotImplementedError()
+
+
+@register_tag("_FREL")
+class Father_Relation(Children):
+    """Represents pointer to a father relation"""
+
+    pass
+
+@register_tag("_MREL")
+class Mother_Relation(Children):
+    """Represents pointer to a father relation"""
+
+    pass
 
 
 @register_tag("CHIL")
