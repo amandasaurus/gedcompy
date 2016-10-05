@@ -5,9 +5,9 @@ gedcompy
 <img src='https://coveralls.io/repos/rory/gedcompy/badge.png?branch=master' />
 
 
-Python library to parse and work with `GEDCOM <https://en.wikipedia.org/wiki/GEDCOM>`_ (genealogy/family tree) files.
+Python library to parse and work with <a href='https://en.wikipedia.org/wiki/GEDCOM'>`GEDCOM`</a> (genealogy/family tree) files.
 
-It's goal is to support GEDCOM v5.5 (`specification here <http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm>`_).
+It's goal is to support GEDCOM v5.5 (<a href='http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm'>`Specification Here`</a>).
 
 This is released under the GNU General Public Licence version 3 (or at your option, a later version). See the file `LICENCE` for more.
 
