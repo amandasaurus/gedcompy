@@ -1,11 +1,8 @@
 gedcompy
 ========
 
-.. image:: https://travis-ci.org/rory/gedcompy.svg?branch=master
-    :target: https://travis-ci.org/rory/gedcompy
-
-.. image:: https://coveralls.io/repos/rory/gedcompy/badge.png?branch=master
-  :target: https://coveralls.io/r/rory/gedcompy?branch=master
+<img src='https://travis-ci.org/rory/gedcompy.svg?branch=master' />
+<img src='https://coveralls.io/repos/rory/gedcompy/badge.png?branch=master' />
 
 
 Python library to parse and work with `GEDCOM <https://en.wikipedia.org/wiki/GEDCOM>`_ (genealogy/family tree) files.
