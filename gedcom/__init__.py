@@ -256,7 +256,7 @@ class Element(object):
         """
         children = [c for c in self.child_elements if c.tag == key]
         if len(children) == 0:
-            raise IndexError(key)
+            pass
         elif len(children) == 1:
             return children[0]
         elif len(children) > 1:
@@ -570,6 +570,52 @@ class Family(Element):
         """
         return self.get_list("HUSB") + self.get_list("WIFE")
 
+    @property
+    def marriage(self):
+        """
+        Return the :py:class: `Marriage` for this object
+        
+        :return: marriage record
+        :raises IndexError: If there is no record
+        :rtype: :py:class:`Marriage`
+        """
+        marriage_record = self.get_list("MARR")
+        return marriage_record[0]
+    
+    @property
+    def wife(self):
+        """
+        Return the :py:class:`Wife` for this object.
+
+        :return: wife
+        :raises IndexError: If there is no record
+        :rtype: :py:class:`Wife`
+        """
+        wife = self.get_list("WIFE")
+        return wife[0]
+
+    @property
+    def husband(self):
+        """
+        Return the :py:class:`Husband` for this object.
+
+        :return: husband
+        :raises IndexError: If there is no record
+        :rtype: :py:class:`Husband`
+        """
+        husband = self.get_list("HUSB")
+        return husband[0]
+
+    @property
+    def children(self):
+        """
+        Return a list of children for this object.
+
+        :return: children
+        :raises IndexError: If there is no record of this type
+        :rtype: list
+        """
+        return self.get_list("CHIL")
 
 class Spouse(Element):
     """Generic base class for HUSB/WIFE."""
@@ -594,9 +640,76 @@ class Husband(Spouse):
 
 @register_tag("WIFE")
 class Wife(Spouse):
-    """Represents pointer to a husband in a family."""
+    """Represents pointer to a wife in a family."""
 
     pass
+
+class Children(Element):
+    """ Generic base class for CHIL """
+
+    def as_individual(self):
+        """
+        Return the :py:class:`Individual` for this object.
+
+        :returns: the individual
+        :rtype: :py:class:`Individual`
+        :raises KeyError: if id/pointer not found in the file.
+        """
+
+        return self.gedcom_file[self.value]
+
+
+    @property
+    def father_relation(self):
+        """
+        Return child relation to father
+
+        :returns: Natural if it exists
+        :raise NotImplementedError: if anything other than Natural
+        :rtype: string
+        """
+        father_relation = self.get_list("_FREL")
+        if father_relation[0].value == "Natural":
+            return father_relation[0].value
+        else:
+            raise NotImplementedError()
+
+
+    @property
+    def mother_relation(self):
+        """
+        Return child relation to mother
+
+        :returns: Natural if it exists
+        :raise NotImplementedError: if anything other than Natural
+        :rtype: string
+        """
+        mother_relation = self.get_list("_MREL")
+        if mother_relation[0].value =="Natural":
+            return mother_relation[0].value
+        else:
+            raise NotImplementedError()
+
+
+@register_tag("_FREL")
+class Father_Relation(Children):
+    """Represents pointer to a father relation"""
+
+    pass
+
+@register_tag("_MREL")
+class Mother_Relation(Children):
+    """Represents pointer to a father relation"""
+
+    pass
+
+
+@register_tag("CHIL")
+class Child(Children):
+    """Represents pointer to a child in a family"""
+
+    pass
+
 
 
 class Event(Element):
