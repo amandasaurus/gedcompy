@@ -1,16 +1,13 @@
 gedcompy
 ========
 
-.. image:: https://travis-ci.org/rory/gedcompy.svg?branch=master
-    :target: https://travis-ci.org/rory/gedcompy
-
-.. image:: https://coveralls.io/repos/rory/gedcompy/badge.png?branch=master
-  :target: https://coveralls.io/r/rory/gedcompy?branch=master
+<img src='https://travis-ci.org/rory/gedcompy.svg?branch=master' />
+<img src='https://coveralls.io/repos/rory/gedcompy/badge.png?branch=master' />
 
 
-Python library to parse and work with `GEDCOM <https://en.wikipedia.org/wiki/GEDCOM>`_ (genealogy/family tree) files.
+Python library to parse and work with <a href='https://en.wikipedia.org/wiki/GEDCOM'>`GEDCOM`</a> (genealogy/family tree) files.
 
-It's goal is to support GEDCOM v5.5 (`specification here <http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm>`_).
+It's goal is to support GEDCOM v5.5 (<a href='http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/55gctoc.htm'>`Specification Here`</a>).
 
 This is released under the GNU General Public Licence version 3 (or at your option, a later version). See the file `LICENCE` for more.
 
@@ -79,33 +76,23 @@ To specify individual record types:
 ```
 The AttributeError is thrown when a record of that type does not exist, and by default will NOT pass onto the next record.
 
-To bypass this error use a try/except case to pass over records that don't exist
 
-```python
->>> for person in gedfile.individuals:
-...     try:
-...         print person.birth.place
-...     except AttributeError:
-...        print "There is no birth place record for this person"
-# There is no birth place record for this person
-# Brooklyn, New York City, New York, USA
-```
 ##### current available use cases
 ```
-person.birth              # birth info
+person.birth              # class - birth
 person.birth.place        # string
 person.birth.date         # string
-person.death              # death info
+person.death              # class - death
 person.death.place        # string
 person.death.date         # string
-person.name               # return first and last name as a tuple
-person.father             # father full info
-person.mother             # mother full info
-person.parents            # list both parents full info index[0] is father index[1] is mother
-person.aka                # list 'also known as' name
-person.gender             # string : 'M' or 'F'
-person.sex                # same as gender
-person.id                 # @P12@
+person.name               # tuple - firstname, lastname
+person.father             # class - father
+person.mother             # class - mother
+person.parents            # list - contaning father and mother class
+person.aka                # list - 'also known as' name
+person.gender             # string - 'M' or 'F'
+person.sex                # string - ''     ''
+person.id                 # string - @P12@
 person.is_female          # boolean
 person.is_male            # boolean
 person.note               # string
@@ -173,17 +160,78 @@ Use cases for partners:
 >>> for family in gedfile.families:
 ...     print family.partners[0].value
 # @P5@
+
+>>> for family in gedfile.families:
+...     print family.husband
+...     print family.wife
+# Husband(1, 'HUSB', '@P5@')
+# Wife(1, 'WIFE', '@P1@')
 ```
+
+Use cases for children
 
 ##### current available use cases
 
 ```
-family.id           # string '@F49@'
-family.tag          # string 'FAM'
-family.partners     # list 
+family.id                       # string '@F49@'
+family.tag                      # string 'FAM'
+family.partners                 # list 
+family.wife                     # class - wife
+family.husband                  # class - husband
+family.children                 # list
+family.children.father_relation # String 'Natural'
+family.children.mother_relation # string 'Natural'
 ```
 
-### dates
+### Residence
+Residence records
+
+```python
+>>> for person in gedfile.individuals
+...			print person.residence
+# Residence(1, 'RESI', 'Marital Status: SingleRelation to Head of House: Son', [Element(2, 'DATE', '1910'), Element(2, 'PLAC', 'Lowell Ward 6, Middlesex, Massachusetts, USA'), Source(2, 'SOUR', '@S1002094821@', [Element(3, 'PAGE', 'Year: 1910; Census Place: Lowell Ward 6, Middlesex, Massachusetts; Roll: T624_600; Page: 33A; Enumeration District: 0864; FHL microfilm: 1374613'), Element(3, '_APID', '1,7884::108099427')])])
+>>> for person in gedfile.individuals
+...			print person.residence.date
+...			print person.residence.source
+# 1910
+# @S100243564@
+```
+
+##### current available use cases
+```
+residence.date
+residence.id
+residence.note
+residence.parent_id
+residence.place
+residence.source
+residence.value
+```
+
+### Error Handling
+By default, if a record doesn't exist an error will be raised and will not continue onto the rest of the records. This is on purpose, but can by bypassed by using try/except cases. The most common errors that are raised are IndexError and AttributeError
+
+```python
+>>> for person in gedfile.individuals:
+...     try:
+...         print person.birth.place
+...     except AttributeError:
+...         print "There is no birth place record for this person"
+# There is no birth place record for this person
+# Brooklyn, New York City, New York, USA
+```
+```python
+>>> for family in gedfile.families:
+...     try:
+...         print family.marriage
+...     except IndexError as e:
+...         print "no record: ", e
+# Marriage(1, 'MARR', [Element(2, 'DATE', '08 Aug 1854')])
+# no record: IndexError: list index out of range
+# Marriage(1, 'MARR', [Element(2, 'DATE', '1954')])
+```
+
+### Dates
 Dates are user input and can vary wildly in formatting. There are also approximate dates that cannot be formatted. 
 These approximate dates can be stripped out using `re` or just `str.replace()`
 
