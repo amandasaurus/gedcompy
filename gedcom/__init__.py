@@ -556,6 +556,39 @@ class Individual(Element):
         except:
             return None
 
+    @property
+    def source(self):
+        """
+        Get the source of information for that element
+
+        :returns: source info
+        :rtype: string
+        :raises :AttributeError: if there is no source info
+        """
+        return self['SOUR'].value
+
+    @property
+    def note(self):
+        """
+        get any notes about an individual
+
+        :returns: note
+        :rtype: string
+        :raises :AttributeError: if there is no note for that Individual
+        """
+        return self['NOTE'].value
+
+    @property
+    def residence(self):
+        """
+        return :py:class: `Residence` for this individual
+
+        :returns: residence
+        :rtype: :py:class: `Residence`
+        :raises :AttributeError: if there is no residence record
+        """
+        return self['RESI']
+
 
 @register_tag("FAM")
 class Family(Element):
@@ -592,6 +625,24 @@ class Family(Element):
 
 
 
+    @property
+    def marriage(self):
+        """
+        Return a list of marriage records. all MARR child elements.
+
+        :rtype: list of Marriage information
+        """
+        return self.get_list("MARR")
+
+    @property
+    def husband(self):
+        return self.get_list("HUSB")
+
+    @property
+    def wife(self):
+        return self.get_list("WIFE")
+
+ 
 class Spouse(Element):
     """Generic base class for HUSB/WIFE."""
 
@@ -645,6 +696,21 @@ class Event(Element):
         """
         return self['PLAC'].value
 
+    @property
+    def source(self):
+        """
+        Get the source of information for that element
+
+        :returns: source info
+        :rtype: string
+        """
+        return self['SOUR'].value
+
+@register_tag("RESI")
+class Residence(Event):
+    """Represents an individuals residence"""
+    pass
+
 
 @register_tag("BIRT")
 class Birth(Event):
@@ -666,6 +732,11 @@ class Marriage(Event):
 
     pass
 
+@register_tag("SOUR")
+class Source(Element):
+    """Represents an information source"""
+    
+    pass
 
 @register_tag("NOTE")
 class Note(Element):
