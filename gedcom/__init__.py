@@ -594,7 +594,7 @@ class Husband(Spouse):
 
 @register_tag("WIFE")
 class Wife(Spouse):
-    """Represents pointer to a husband in a family."""
+    """Represents pointer to a wife in a family."""
 
     pass
 
