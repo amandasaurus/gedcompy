@@ -25,4 +25,7 @@ setup(
         'Topic :: Sociology :: History',
         'Topic :: Text Processing',
       ],
+    install_requires = [
+        'six',
+    ]
 )
