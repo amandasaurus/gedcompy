@@ -287,5 +287,19 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1-123@ INDI\n1 NAME\n2 GIVN Bob\n0 TRLR")
         self.assertEqual(list(gedcomfile.individuals)[0].name, ('Bob', None))
 
+    def testFamilies(self):
+        gedcomfile = gedcom.parse_string(GEDCOM_FILE)
+        fam = list(gedcomfile.families)[0]
+
+        self.assertEqual(len(fam.husbands), 1)
+        husband = fam.husbands[0].as_individual()
+        self.assertEqual(husband.name, ('Robert', 'Cox'))
+        self.assertEqual(husband.id, '@I1@')
+
+        self.assertEqual(len(fam.wives), 1)
+        wives = fam.wives[0].as_individual()
+        self.assertEqual(wives.name, ('Joann', 'Para'))
+        self.assertEqual(wives.id, '@I2@')
+
 if __name__ == '__main__':
     unittest.main()

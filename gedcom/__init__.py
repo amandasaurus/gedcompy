@@ -570,6 +570,27 @@ class Family(Element):
         """
         return self.get_list("HUSB") + self.get_list("WIFE")
 
+    @property
+    def husbands(self):
+        """
+        Return the :py:class:`Husband`'s for this object.
+
+        :return: list
+        :rtype: list of :py:class:`Husband`
+        """
+        return self.get_list("HUSB")
+
+    @property
+    def wives(self):
+        """
+        Return the :py:class:`Wife`'s for this object.
+
+        :return: list
+        :rtype: list of :py:class:`Wife`
+        """
+        return self.get_list("WIFE")
+
+
 
 class Spouse(Element):
     """Generic base class for HUSB/WIFE."""
