@@ -256,7 +256,7 @@ class Element(object):
         """
         children = [c for c in self.child_elements if c.tag == key]
         if len(children) == 0:
-            raise IndexError(key)
+            raise IndexError
         elif len(children) == 1:
             return children[0]
         elif len(children) > 1:
