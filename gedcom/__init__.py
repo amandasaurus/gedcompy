@@ -427,6 +427,8 @@ class Individual(Element):
 
                 first = first.strip()
                 last = last.strip()
+            elif len(vals) > 3:
+                raise Exception("Malformed name field: " + preferred_name.value)
 
         return first, last
 
