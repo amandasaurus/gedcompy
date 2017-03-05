@@ -188,6 +188,18 @@ class GedComTestCase(unittest.TestCase):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Cox/\n\n0 TRLR")
         self.assertEqual(gedcomfile['@I1@'].name, ('Bob', 'Cox'))
 
+    def testSupportNameWithOnlyFirstName(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME William\n\n0 TRLR")
+        self.assertEqual(gedcomfile['@I1@'].name, ('William', None))
+
+    def testSupportNameWithOnlyLastName(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME /Cox/\n\n0 TRLR")
+        self.assertEqual(gedcomfile['@I1@'].name, (None, 'Cox'))
+
+    def testSupportNameWithEmbeddedLastName(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Cox/ James\n\n0 TRLR")
+        self.assertEqual(gedcomfile['@I1@'].name, ('Bob James', 'Cox'))
+
     def testSaveFile(self):
         gedcomfile = gedcom.parse_string(GEDCOM_FILE)
         outputfile = tempfile.NamedTemporaryFile()
@@ -281,6 +293,10 @@ class GedComTestCase(unittest.TestCase):
 
     def testInvalidNames(self):
         gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob /Russel\n0 TRLR")
+        self.assertRaises(Exception, lambda : list(gedcomfile.individuals)[0].name)
+
+    def testNameWithTooManySlashes(self):
+        gedcomfile = gedcom.parse_string("0 HEAD\n0 @I1@ INDI\n1 NAME Bob/Robert /Russel/\n\n0 TRLR")
         self.assertRaises(Exception, lambda : list(gedcomfile.individuals)[0].name)
 
     def testDashInID(self):

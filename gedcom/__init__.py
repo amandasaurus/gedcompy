@@ -422,11 +422,20 @@ class Individual(Element):
                 # malformed line
                 raise Exception
             elif len(vals) == 3:
-                # Normal
-                first, last, dud = vals
-
+                first, last, first_tail = vals
                 first = first.strip()
                 last = last.strip()
+                first_tail = first_tail.strip()
+
+                if not first:
+                    # only last name
+                    first = None
+                elif first_tail:
+                    # last name embedded in first name(s)
+                    first = " ".join([first, first_tail])
+
+            elif len(vals) > 3:
+                raise Exception("Malformed NAME field: " + preferred_name.value)
 
         return first, last
 
@@ -589,7 +598,6 @@ class Family(Element):
         :rtype: list of :py:class:`Wife`
         """
         return self.get_list("WIFE")
-
 
 
 class Spouse(Element):
