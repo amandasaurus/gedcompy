@@ -242,8 +242,10 @@ class Element(object):
     def __repr__(self):
         """Interal string represation of this object, for debugging purposes."""
         return "{classname}({level}, {tag!r}{id}{value}{children})".format(
-            classname=self.__class__.__name__, level=self.level, tag=self.tag, id=(", " + repr(self.id) if self.id else ""),
-            value=(", " + repr(self.value) if self.value else ""), children=(", " + repr(self.child_elements) if len(self.child_elements) > 0 else ""))
+            classname=self.__class__.__name__, level=self.level, tag=self.tag,
+            id=(", " + repr(self.id) if self.id else ""),
+            value=(", " + repr(self.value) if self.value else ""),
+            children=(", " + repr(self.child_elements) if len(self.child_elements) > 0 else ""))
 
     def __getitem__(self, key):
         """
@@ -322,7 +324,8 @@ class Element(object):
         :rtype: iterator over string
         """
         line_format = re.compile("^(?P<level>[0-9]+) ((?P<id>@[a-zA-Z0-9]+@) )?(?P<tag>[A-Z]+)( (?P<value>.*))?$")
-        line = u"{level}{id} {tag}{value}".format(level=self.level, id=(" " + self.id if self.id else ""), tag=self.tag, value=(" " + self.value if self.value else ""))
+        line = u"{level}{id} {tag}{value}".format(level=self.level, id=(" " + self.id if self.id else ""), tag=self.tag,
+                                                  value=(" " + self.value if self.value else ""))
         yield line
         for child in self.child_elements:
             for line in child.gedcom_lines():
@@ -346,11 +349,13 @@ tags_to_classes = {}
 
 def register_tag(tag):
     """Internal class decorator to mark a python class as to be the handler for this tag."""
+
     def classdecorator(klass):
         global tags_to_classes
         tags_to_classes[tag] = klass
         klass.default_tag = tag
         return klass
+
     return classdecorator
 
 
@@ -465,24 +470,30 @@ class Individual(Element):
     @property
     def sex(self):
         """
-        Return the sex of this person, as the string 'M' or 'F'.
+        Return the sex of this person, as the string 'M' or 'F', or 'U' if not assigned.
 
         NB: This should probably support more sexes/genders.
 
         :rtype: str
         """
-        return self['SEX'].value
+        try:
+            return self['SEX'].value
+        except IndexError:
+            return 'U'
 
     @property
     def gender(self):
         """
-        Return the sex of this person, as the string 'M' or 'F'.
+        Return the sex of this person, as the string 'M' or 'F', or 'U' if not assigned.
 
         NB: This should probably support more sexes/genders.
 
         :rtype: str
         """
-        return self['SEX'].value
+        try:
+            return self['SEX'].value
+        except IndexError:
+            return 'U'
 
     @property
     def father(self):
@@ -532,21 +543,26 @@ class Individual(Element):
         """Return True iff this person is recorded as male."""
         return self.sex.lower() == 'm'
 
+    @property
+    def is_gender_unknown(self):
+        """Return True iff this person is recorded as unknown gendered."""
+        return self.sex.lower() == 'u'
+
     def set_sex(self, sex):
         """
         Set the sex for this person.
 
-        :param str sex: 'M' or 'F' for male or female resp.
+        :param str sex: 'M', 'F', or 'U'  for male, female or unknown resp.
         :raises TypeError: if `sex` is invalid
         """
         sex = sex.upper()
-        if sex not in ['M', 'F']:
-            raise TypeError("Currently only support M or F")
+        if sex not in ['M', 'F', 'U']:
+            raise TypeError("Currently only support M, F, or U")
         try:
             sex_node = self['SEX']
             sex_node.value = sex
         except IndexError:
-            self.add_child_element(self.gedcom_file.element("SEX", value=sex))
+            self.add_child_element(self.gedcom_file.element("SEX", level=1, value=sex))
 
     @property
     def title(self):
@@ -589,7 +605,6 @@ class Family(Element):
         :rtype: list of :py:class:`Wife`
         """
         return self.get_list("WIFE")
-
 
 
 class Spouse(Element):
@@ -785,7 +800,8 @@ def __parse(lines_iter):
             level_to_obj = dict((l, obj) for l, obj in level_to_obj.items() if l < level)
             parent = level_to_obj[level - 1]
 
-        element = line_to_element(level=level, parent=parent, tag=match.groupdict()['tag'], value=match.groupdict()['value'], id=match.groupdict()['id'])
+        element = line_to_element(level=level, parent=parent, tag=match.groupdict()['tag'],
+                                  value=match.groupdict()['value'], id=match.groupdict()['id'])
         level_to_obj[level] = element
         element.gedcom_file = gedcom_file
         gedcom_file.add_element(element)
